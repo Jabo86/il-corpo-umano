@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sull'apparato tegumentario per l'Operatore Socio-Sanitario (OSS): scopri pelle, annessi cutanei e quiz interattivi.">
+    <meta name="keywords" content="apparato tegumentario, OSS, epidermide, derma, ipoderma, quiz tegumentario">
+    <title>L'Apparato Tegumentario</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>L'Apparato Tegumentario</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#epidermide">Epidermide</a>
+        <a href="#derma">Derma</a>
+        <a href="#ipoderma">Ipoderma</a>
+        <a href="#annessi">Annessi Cutanei</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione all'Apparato Tegumentario</h2>
+            <p>L'apparato tegumentario svolge le funzioni di rivestimento, secrezione, termoregolazione, attività sensoriale e protezione dell'organismo. Nei vertebrati è costituito dalla pelle e dagli annessi cutanei.</p>
+        </section>
+
+        <section id="epidermide">
+            <h2>L'Epidermide</h2>
+            <p>È la zona più esterna della pelle. Alla sua base ci sono numerosi strati di cellule che si riproducono continuamente spostandosi verso gli strati più esterni per sostituire quelle che muoiono e si staccano (causando ad esempio, la forfora). Nell'epidermide si possono riconoscere più strati, dal basso verso l'alto:</p>
+            <ul>
+                <li><strong>Strato basale</strong>: Cheratinociti con cellule cubiche unite da desmosomi e ancorate alla membrana basale da emidesmosomi; contengono tonofilamenti di cheratina.</li>
+                <li><strong>Strato spinoso</strong>: Cellule poliedriche con accumulo di tonofibrille, proteine di membrana e granuli lamellati.</li>
+                <li><strong>Strato granuloso</strong>: Cellule pavimentose ricche di cheratina e granuli di chetoialina.</li>
+                <li><strong>Strato corneo</strong>: Cellule ridotte a lamine, morte per apoptosi.</li>
+            </ul>
+            <p>L'epidermide non contiene vasi sanguigni, salvo negli anfibi che respirano anche attraverso la pelle (come le rane), e viene nutrita per diffusione attraverso il derma sottostante. All'interno dell'epidermide troviamo altre cellule con funzioni diverse:</p>
+            <ul>
+                <li><strong>Cellule di Merkel</strong>: In contatto con terminazioni nervose, generano segnali tattili.</li>
+                <li><strong>Cellule di Langerhans</strong>: Nello strato spinoso, ramificate, con funzioni di difesa; inglobano sostanze estranee e le presentano ai linfociti tramite MHC di classe II.</li>
+                <li><strong>Melanociti</strong>: Nello strato basale, producono melanina assunta dai cheratinociti.</li>
+            </ul>
+        </section>
+
+        <section id="derma">
+            <h2>Il Derma</h2>
+            <p>Si trova sotto l'epidermide ed è costituito da tessuto connettivo, che funge da ammortizzatore per i traumi meccanici della pelle. È legato all'epidermide da una membrana basale e ospita terminazioni nervose (meccanorecettori) per sensibilità tattile e termica. Contiene vasi sanguigni, vasi linfatici, ghiandole sebacee, sudoripare, apocrine e follicoli piliferi. Si suddivide in due strati:</p>
+            <ul>
+                <li><strong>Strato papillare</strong>: Adiacente all'epidermide, con papille digitiformi che rafforzano l'adesione; forma dermatoglifi (es. impronte digitali).</li>
+                <li><strong>Strato reticolare</strong>: Più profondo e spesso, con fibre collagene, reticolari ed elastiche per elasticità, estensibilità e resistenza; origina bulbi piliferi, unghie e ghiandole.</li>
+            </ul>
+        </section>
+
+        <section id="ipoderma">
+            <h2>Tessuto Sottocutaneo (Ipoderma)</h2>
+            <p>L'ipoderma è la parte più interna, a contatto con muscoli e organi sottostanti. Di derivazione mesenchimale, è costituito da adipociti ricchi di lipidi (trigliceridi), circondati da vasi arteriosi e venosi. Ha spessore variabile e funge da isolante, riserva di lipidi, ammortizzatore e favorisce la mobilità della pelle rispetto alle strutture profonde.</p>
+        </section>
+
+        <section id="annessi">
+            <h2>Annessi Cutanei</h2>
+            <p>Gli annessi cutanei includono:</p>
+            <ul>
+                <li>Unghie</li>
+                <li>Ghiandole sudoripare</li>
+                <li>Capelli e peli</li>
+                <li>Ghiandole sebacee</li>
+            </ul>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sull'Apparato Tegumentario</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 L'Apparato Tegumentario - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Quali sono le funzioni principali dell'apparato tegumentario?", options: ["Rivestimento, secrezione, termoregolazione, sensoriale, protezione", "Digestione, respirazione, movimento", "Circolazione, secrezione, protezione", "Termoregolazione, digestione, sensoriale"], correct: "Rivestimento, secrezione, termoregolazione, sensoriale, protezione" },
+                { question: "Di cosa è costituito l'apparato tegumentario nei vertebrati?", options: ["Pelle e annessi cutanei", "Muscoli e ossa", "Pelle e vasi sanguigni", "Nervi e ghiandole"], correct: "Pelle e annessi cutanei" },
+                { question: "Qual è lo strato più esterno della pelle?", options: ["Epidermide", "Derma", "Ipoderma", "Strato reticolare"], correct: "Epidermide" },
+                { question: "Quale strato dell'epidermide contiene cheratinociti con tonofilamenti?", options: ["Strato basale", "Strato spinoso", "Strato granuloso", "Strato corneo"], correct: "Strato basale" },
+                { question: "Cosa unisce le cellule dello strato basale?", options: ["Desmosomi", "Emidesmosomi", "Tonofibrille", "Granuli lamellati"], correct: "Desmosomi" },
+                { question: "Quale strato dell'epidermide accumula tonofibrille?", options: ["Strato spinoso", "Strato basale", "Strato corneo", "Strato granuloso"], correct: "Strato spinoso" },
+                { question: "Quale strato contiene cellule pavimentose ricche di cheratina?", options: ["Strato granuloso", "Strato basale", "Strato spinoso", "Strato corneo"], correct: "Strato granuloso" },
+                { question: "Quale strato dell'epidermide è formato da cellule morte?", options: ["Strato corneo", "Strato granuloso", "Strato spinoso", "Strato basale"], correct: "Strato corneo" },
+                { question: "Come viene nutrita l'epidermide?", options: ["Diffusione dal derma", "Vasi sanguigni", "Ghiandole sudoripare", "Melanociti"], correct: "Diffusione dal derma" },
+                { question: "Quali cellule dell'epidermide generano segnali tattili?", options: ["Cellule di Merkel", "Cellule di Langerhans", "Melanociti", "Cheratinociti"], correct: "Cellule di Merkel" },
+                { question: "Dove si trovano le cellule di Langerhans?", options: ["Strato spinoso", "Strato basale", "Strato corneo", "Strato granuloso"], correct: "Strato spinoso" },
+                { question: "Cosa producono i melanociti?", options: ["Melanina", "Cheratina", "Chetoialina", "Tonofibrille"], correct: "Melanina" },
+                { question: "Quale strato si trova sotto l'epidermide?", options: ["Derma", "Ipoderma", "Strato corneo", "Strato basale"], correct: "Derma" },
+                { question: "Di cosa è costituito il derma?", options: ["Tessuto connettivo", "Tessuto muscolare", "Tessuto adiposo", "Tessuto nervoso"], correct: "Tessuto connettivo" },
+                { question: "Quale strato del derma è adiacente all'epidermide?", options: ["Strato papillare", "Strato reticolare", "Strato corneo", "Strato basale"], correct: "Strato papillare" },
+                { question: "Cosa forma i dermatoglifi?", options: ["Strato papillare", "Strato reticolare", "Ipoderma", "Epidermide"], correct: "Strato papillare" },
+                { question: "Quale strato del derma contiene fibre elastiche?", options: ["Strato reticolare", "Strato papillare", "Strato corneo", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Da dove originano i bulbi piliferi?", options: ["Strato reticolare", "Strato papillare", "Epidermide", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Quale parte dell'apparato tegumentario è più interna?", options: ["Ipoderma", "Derma", "Epidermide", "Strato papillare"], correct: "Ipoderma" },
+                { question: "Di cosa sono ricchi gli adipociti dell'ipoderma?", options: ["Trigliceridi", "Cheratina", "Melanina", "Collagene"], correct: "Trigliceridi" },
+                { question: "Quale funzione ha l'ipoderma?", options: ["Isolante e riserva di lipidi", "Produzione melanina", "Sensibilità tattile", "Secrezione sudoripara"], correct: "Isolante e riserva di lipidi" },
+                { question: "Quale annesso cutaneo produce sebo?", options: ["Ghiandole sebacee", "Ghiandole sudoripare", "Unghie", "Capelli"], correct: "Ghiandole sebacee" },
+                { question: "Dove si trovano i follicoli piliferi?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Quali cellule presentano sostanze estranee ai linfociti?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Cheratinociti"], correct: "Cellule di Langerhans" },
+                { question: "Cosa connette l'epidermide al derma?", options: ["Membrana basale", "Desmosomi", "Papille", "Fibre elastiche"], correct: "Membrana basale" },
+                { question: "Quale strato del derma è più spesso?", options: ["Strato reticolare", "Strato papillare", "Strato basale", "Strato corneo"], correct: "Strato reticolare" },
+                { question: "Quale annesso cutaneo è visibile sulle dita?", options: ["Unghie", "Capelli", "Ghiandole sebacee", "Ghiandole sudoripare"], correct: "Unghie" },
+                { question: "Quale strato dell'epidermide causa la forfora?", options: ["Strato corneo", "Strato basale", "Strato spinoso", "Strato granuloso"], correct: "Strato corneo" },
+                { question: "Cosa conferisce elasticità alla pelle?", options: ["Fibre elastiche", "Cheratina", "Melanina", "Trigliceridi"], correct: "Fibre elastiche" },
+                { question: "Quale funzione sensoriale è legata al derma?", options: ["Sensibilità tattile", "Produzione sebo", "Isolamento termico", "Secrezione sudoripara"], correct: "Sensibilità tattile" }
+            ],
+            // Quiz 2
+            [
+                { question: "Cosa protegge l'organismo nell'apparato tegumentario?", options: ["Pelle", "Muscoli", "Ossa", "Vasi sanguigni"], correct: "Pelle" },
+                { question: "Quale strato della pelle si rigenera continuamente?", options: ["Epidermide", "Derma", "Ipoderma", "Strato reticolare"], correct: "Epidermide" },
+                { question: "Dove si trovano i cheratinociti cubici?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Strato granuloso"], correct: "Strato basale" },
+                { question: "Cosa ancora le cellule basali alla membrana?", options: ["Emidesmosomi", "Desmosomi", "Tonofibrille", "Granuli lamellati"], correct: "Emidesmosomi" },
+                { question: "Quale strato ha cellule poliedriche?", options: ["Strato spinoso", "Strato basale", "Strato corneo", "Strato reticolare"], correct: "Strato spinoso" },
+                { question: "Quale strato contiene granuli di chetoialina?", options: ["Strato granuloso", "Strato basale", "Strato spinoso", "Strato corneo"], correct: "Strato granuloso" },
+                { question: "Quale strato è ridotto a lamine morte?", options: ["Strato corneo", "Strato granuloso", "Strato papillare", "Strato basale"], correct: "Strato corneo" },
+                { question: "Quali vertebrati hanno vasi sanguigni nell'epidermide?", options: ["Anfibi", "Mammiferi", "Rettili", "Uccelli"], correct: "Anfibi" },
+                { question: "Quali cellule sono in contatto con terminazioni nervose?", options: ["Cellule di Merkel", "Melanociti", "Cellule di Langerhans", "Adipociti"], correct: "Cellule di Merkel" },
+                { question: "Quali cellule difendono da sostanze estranee?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Cheratinociti"], correct: "Cellule di Langerhans" },
+                { question: "Dove si trovano i melanociti?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Derma"], correct: "Strato basale" },
+                { question: "Quale strato funge da ammortizzatore?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Cosa fornisce sensibilità termica nel derma?", options: ["Meccanorecettori", "Ghiandole sebacee", "Vasi linfatici", "Fibre elastiche"], correct: "Meccanorecettori" },
+                { question: "Quale strato del derma ha papille digitiformi?", options: ["Strato papillare", "Strato reticolare", "Strato basale", "Ipoderma"], correct: "Strato papillare" },
+                { question: "Dove si trovano i dermatoglifi?", options: ["Polpastrelli", "Braccia", "Gambe", "Schiena"], correct: "Polpastrelli" },
+                { question: "Quale strato del derma origina le ghiandole sudoripare?", options: ["Strato reticolare", "Strato papillare", "Epidermide", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Cosa conferisce resistenza alla pelle?", options: ["Fibre collagene", "Cheratina", "Melanina", "Trigliceridi"], correct: "Fibre collagene" },
+                { question: "Quale strato è a contatto con i muscoli?", options: ["Ipoderma", "Derma", "Epidermide", "Strato corneo"], correct: "Ipoderma" },
+                { question: "Cosa contengono gli adipociti?", options: ["Lipidi", "Cheratina", "Collagene", "Melanina"], correct: "Lipidi" },
+                { question: "Quale funzione dell'ipoderma favorisce la mobilità?", options: ["Ammortizzatore", "Isolante", "Riserva di lipidi", "Mobilità della pelle"], correct: "Mobilità della pelle" },
+                { question: "Quale annesso cutaneo è associato ai capelli?", options: ["Follicoli piliferi", "Unghie", "Ghiandole sudoripare", "Ghiandole sebacee"], correct: "Follicoli piliferi" },
+                { question: "Quali ghiandole si trovano nel derma?", options: ["Sudoripare", "Endocrine", "Salivari", "Pancreatiche"], correct: "Sudoripare" },
+                { question: "Cosa presentano le cellule di Langerhans ai linfociti?", options: ["Sostanze estranee", "Melanina", "Cheratina", "Segnali tattili"], correct: "Sostanze estranee" },
+                { question: "Quale strato del derma è più profondo?", options: ["Strato reticolare", "Strato papillare", "Strato basale", "Strato corneo"], correct: "Strato reticolare" },
+                { question: "Quale annesso cutaneo protegge le dita?", options: ["Unghie", "Capelli", "Ghiandole sebacee", "Peli"], correct: "Unghie" },
+                { question: "Quale strato della pelle si stacca continuamente?", options: ["Strato corneo", "Strato basale", "Strato spinoso", "Ipoderma"], correct: "Strato corneo" },
+                { question: "Cosa rafforza l'adesione tra epidermide e derma?", options: ["Papille", "Fibre elastiche", "Adipociti", "Melanociti"], correct: "Papille" },
+                { question: "Quale funzione è legata agli annessi cutanei?", options: ["Secrezione", "Digestione", "Circolazione", "Respirazione"], correct: "Secrezione" },
+                { question: "Quale strato contiene vasi sanguigni?", options: ["Derma", "Epidermide", "Strato corneo", "Strato basale"], correct: "Derma" },
+                { question: "Quale elemento del derma è geneticamente unico?", options: ["Dermatoglifi", "Fibre elastiche", "Ghiandole sudoripare", "Melanociti"], correct: "Dermatoglifi" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale funzione dell'apparato tegumentario regola la temperatura?", options: ["Termoregolazione", "Protezione", "Secrezione", "Sensibilità"], correct: "Termoregolazione" },
+                { question: "Quale parte della pelle è più superficiale?", options: ["Epidermide", "Derma", "Ipoderma", "Strato reticolare"], correct: "Epidermide" },
+                { question: "Quale strato basale contiene tonofilamenti?", options: ["Cheratinociti", "Melanociti", "Cellule di Merkel", "Cellule di Langerhans"], correct: "Cheratinociti" },
+                { question: "Cosa collega le cellule dello strato spinoso?", options: ["Tonofibrille", "Desmosomi", "Emidesmosomi", "Granuli lamellati"], correct: "Tonofibrille" },
+                { question: "Quale strato ha granuli lamellati?", options: ["Strato spinoso", "Strato basale", "Strato corneo", "Strato reticolare"], correct: "Strato spinoso" },
+                { question: "Quale strato dell'epidermide è ricco di chetoialina?", options: ["Strato granuloso", "Strato basale", "Strato corneo", "Strato papillare"], correct: "Strato granuloso" },
+                { question: "Quale strato subisce apoptosi?", options: ["Strato corneo", "Strato spinoso", "Strato basale", "Strato reticolare"], correct: "Strato corneo" },
+                { question: "Chi respira attraverso la pelle tra i vertebrati?", options: ["Anfibi", "Mammiferi", "Rettili", "Pesci"], correct: "Anfibi" },
+                { question: "Quali cellule percepiscono il tatto?", options: ["Cellule di Merkel", "Cellule di Langerhans", "Melanociti", "Adipociti"], correct: "Cellule di Merkel" },
+                { question: "Quali cellule sono ramificate nell'epidermide?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Cheratinociti"], correct: "Cellule di Langerhans" },
+                { question: "Quale pigmento è prodotto dai melanociti?", options: ["Melanina", "Cheratina", "Collagene", "Chetoialina"], correct: "Melanina" },
+                { question: "Quale strato contiene vasi linfatici?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Quale strato del derma forma le impronte digitali?", options: ["Strato papillare", "Strato reticolare", "Ipoderma", "Strato basale"], correct: "Strato papillare" },
+                { question: "Cosa contiene lo strato reticolare?", options: ["Fibre collagene", "Cheratina", "Melanina", "Trigliceridi"], correct: "Fibre collagene" },
+                { question: "Da dove originano le unghie?", options: ["Strato reticolare", "Strato papillare", "Epidermide", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Quale strato è più interno della pelle?", options: ["Ipoderma", "Derma", "Epidermide", "Strato corneo"], correct: "Ipoderma" },
+                { question: "Quale elemento dell'ipoderma isola termicamente?", options: ["Adipociti", "Fibre elastiche", "Vasi sanguigni", "Cheratinociti"], correct: "Adipociti" },
+                { question: "Quale annesso cutaneo è nei follicoli piliferi?", options: ["Capelli", "Unghie", "Ghiandole sudoripare", "Ghiandole sebacee"], correct: "Capelli" },
+                { question: "Quale ghiandola produce sudore?", options: ["Ghiandole sudoripare", "Ghiandole sebacee", "Ghiandole apocrine", "Follicoli piliferi"], correct: "Ghiandole sudoripare" },
+                { question: "Quali cellule usano il MHC di classe II?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Adipociti"], correct: "Cellule di Langerhans" },
+                { question: "Cosa lega derma ed epidermide?", options: ["Membrana basale", "Fibre collagene", "Papille", "Adipociti"], correct: "Membrana basale" },
+                { question: "Quale strato del derma ha fibre reticolari?", options: ["Strato reticolare", "Strato papillare", "Strato basale", "Strato corneo"], correct: "Strato reticolare" },
+                { question: "Quale annesso cutaneo è sulle dita?", options: ["Unghie", "Peli", "Ghiandole sebacee", "Capelli"], correct: "Unghie" },
+                { question: "Quale strato della pelle si rigenera?", options: ["Epidermide", "Derma", "Ipoderma", "Strato reticolare"], correct: "Epidermide" },
+                { question: "Cosa forma le irregolarità della pelle?", options: ["Papille", "Fibre elastiche", "Melanociti", "Adipociti"], correct: "Papille" },
+                { question: "Quale funzione è associata alle ghiandole sebacee?", options: ["Secrezione", "Protezione", "Isolamento", "Sensibilità"], correct: "Secrezione" },
+                { question: "Quale strato contiene ghiandole apocrine?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Quale elemento identifica un individuo?", options: ["Dermatoglifi", "Melanociti", "Fibre elastiche", "Ghiandole sudoripare"], correct: "Dermatoglifi" },
+                { question: "Quale strato ha cellule cubiche?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Strato reticolare"], correct: "Strato basale" },
+                { question: "Quale strato protegge dai traumi?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale funzione sensoriale ha l'apparato tegumentario?", options: ["Sensibilità tattile", "Secrezione", "Protezione", "Termoregolazione"], correct: "Sensibilità tattile" },
+                { question: "Quale strato della pelle è più esterno?", options: ["Epidermide", "Derma", "Ipoderma", "Strato papillare"], correct: "Epidermide" },
+                { question: "Quale strato basale ha cellule cubiche?", options: ["Cheratinociti", "Melanociti", "Cellule di Merkel", "Adipociti"], correct: "Cheratinociti" },
+                { question: "Cosa accumula proteine di membrana?", options: ["Strato spinoso", "Strato basale", "Strato corneo", "Strato reticolare"], correct: "Strato spinoso" },
+                { question: "Quale strato ha cellule pavimentose?", options: ["Strato granuloso", "Strato basale", "Strato spinoso", "Strato corneo"], correct: "Strato granuloso" },
+                { question: "Quale strato è formato da lamine?", options: ["Strato corneo", "Strato papillare", "Strato reticolare", "Strato basale"], correct: "Strato corneo" },
+                { question: "Come si nutre l'epidermide negli anfibi?", options: ["Vasi sanguigni", "Diffusione", "Ghiandole", "Melanociti"], correct: "Vasi sanguigni" },
+                { question: "Quali cellule sono tattili?", options: ["Cellule di Merkel", "Cellule di Langerhans", "Melanociti", "Cheratinociti"], correct: "Cellule di Merkel" },
+                { question: "Quali cellule inglobano germi?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Adipociti"], correct: "Cellule di Langerhans" },
+                { question: "Dove vengono assunti i pigmenti di melanina?", options: ["Cheratinociti", "Melanociti", "Cellule di Merkel", "Strato corneo"], correct: "Cheratinociti" },
+                { question: "Quale strato contiene fibre elastiche?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Quale strato del derma ha protuberanze?", options: ["Strato papillare", "Strato reticolare", "Strato basale", "Ipoderma"], correct: "Strato papillare" },
+                { question: "Quale strato del derma è elastico?", options: ["Strato reticolare", "Strato papillare", "Epidermide", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Cosa origina dal derma profondo?", options: ["Bulbi piliferi", "Melanociti", "Cheratinociti", "Adipociti"], correct: "Bulbi piliferi" },
+                { question: "Quale strato contiene adipociti?", options: ["Ipoderma", "Derma", "Epidermide", "Strato corneo"], correct: "Ipoderma" },
+                { question: "Quale elemento dell'ipoderma è una riserva?", options: ["Trigliceridi", "Fibre elastiche", "Vasi linfatici", "Cheratina"], correct: "Trigliceridi" },
+                { question: "Quale annesso cutaneo è visibile sul capo?", options: ["Capelli", "Unghie", "Ghiandole sudoripare", "Ghiandole sebacee"], correct: "Capelli" },
+                { question: "Quale ghiandola è nel derma?", options: ["Ghiandole sebacee", "Ghiandole endocrine", "Ghiandole salivari", "Ghiandole pancreatiche"], correct: "Ghiandole sebacee" },
+                { question: "Quali cellule processano sostanze estranee?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Adipociti"], correct: "Cellule di Langerhans" },
+                { question: "Quale strato ha fibre collagene?", options: ["Strato reticolare", "Strato papillare", "Strato basale", "Strato corneo"], correct: "Strato reticolare" },
+                { question: "Quale annesso cutaneo è rigido?", options: ["Unghie", "Peli", "Ghiandole sudoripare", "Capelli"], correct: "Unghie" },
+                { question: "Quale strato si stacca causando forfora?", options: ["Strato corneo", "Strato basale", "Strato spinoso", "Ipoderma"], correct: "Strato corneo" },
+                { question: "Cosa rafforza l'epidermide al derma?", options: ["Papille", "Fibre collagene", "Adipociti", "Melanociti"], correct: "Papille" },
+                { question: "Quale funzione è legata ai follicoli piliferi?", options: ["Crescita capelli", "Protezione", "Isolamento", "Sensibilità"], correct: "Crescita capelli" },
+                { question: "Quale strato ha vasi arteriosi?", options: ["Ipoderma", "Epidermide", "Strato corneo", "Strato basale"], correct: "Ipoderma" },
+                { question: "Quale elemento del derma è unico per individuo?", options: ["Dermatoglifi", "Fibre elastiche", "Ghiandole sebacee", "Melanociti"], correct: "Dermatoglifi" },
+                { question: "Quale strato contiene tonofilamenti?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Strato reticolare"], correct: "Strato basale" },
+                { question: "Quale strato protegge dai traumi meccanici?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Quale annesso cutaneo è nel derma profondo?", options: ["Ghiandole sudoripare", "Unghie", "Capelli", "Peli"], correct: "Ghiandole sudoripare" },
+                { question: "Quale strato della pelle ha terminazioni nervose?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale funzione protegge l'organismo?", options: ["Protezione", "Termoregolazione", "Secrezione", "Sensibilità"], correct: "Protezione" },
+                { question: "Quale strato è più superficiale della pelle?", options: ["Epidermide", "Derma", "Ipoderma", "Strato reticolare"], correct: "Epidermide" },
+                { question: "Quale strato ha cheratinociti cubici?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Strato papillare"], correct: "Strato basale" },
+                { question: "Cosa accumula granuli lamellati?", options: ["Strato spinoso", "Strato basale", "Strato corneo", "Strato reticolare"], correct: "Strato spinoso" },
+                { question: "Quale strato contiene cheratina in abbondanza?", options: ["Strato granuloso", "Strato basale", "Strato spinoso", "Strato corneo"], correct: "Strato granuloso" },
+                { question: "Quale strato è morto per apoptosi?", options: ["Strato corneo", "Strato papillare", "Strato reticolare", "Strato basale"], correct: "Strato corneo" },
+                { question: "Quali animali usano l'epidermide per respirare?", options: ["Anfibi", "Mammiferi", "Uccelli", "Rettili"], correct: "Anfibi" },
+                { question: "Quali cellule generano segnali elettrici tattili?", options: ["Cellule di Merkel", "Cellule di Langerhans", "Melanociti", "Adipociti"], correct: "Cellule di Merkel" },
+                { question: "Quali cellule hanno funzioni di difesa?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Cheratinociti"], correct: "Cellule di Langerhans" },
+                { question: "Quale strato produce melanina?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Derma"], correct: "Strato basale" },
+                { question: "Quale strato ha meccanorecettori?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" },
+                { question: "Quale strato del derma ha papille?", options: ["Strato papillare", "Strato reticolare", "Strato basale", "Ipoderma"], correct: "Strato papillare" },
+                { question: "Quale strato del derma dà estensibilità?", options: ["Strato reticolare", "Strato papillare", "Epidermide", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Da dove provengono le ghiandole sebacee?", options: ["Strato reticolare", "Strato papillare", "Epidermide", "Ipoderma"], correct: "Strato reticolare" },
+                { question: "Quale strato è ricco di trigliceridi?", options: ["Ipoderma", "Derma", "Epidermide", "Strato corneo"], correct: "Ipoderma" },
+                { question: "Quale funzione dell'ipoderma ammortizza?", options: ["Ammortizzatore", "Isolante", "Riserva lipidi", "Mobilità"], correct: "Ammortizzatore" },
+                { question: "Quale annesso cutaneo cresce nei follicoli?", options: ["Peli", "Unghie", "Ghiandole sudoripare", "Ghiandole sebacee"], correct: "Peli" },
+                { question: "Quale ghiandola regola la temperatura?", options: ["Ghiandole sudoripare", "Ghiandole sebacee", "Ghiandole apocrine", "Follicoli piliferi"], correct: "Ghiandole sudoripare" },
+                { question: "Quali cellule presentano antigeni ai linfociti?", options: ["Cellule di Langerhans", "Cellule di Merkel", "Melanociti", "Adipociti"], correct: "Cellule di Langerhans" },
+                { question: "Quale strato ha fibre elastiche per elasticità?", options: ["Strato reticolare", "Strato papillare", "Strato basale", "Strato corneo"], correct: "Strato reticolare" },
+                { question: "Quale annesso cutaneo è duro?", options: ["Unghie", "Capelli", "Ghiandole sebacee", "Peli"], correct: "Unghie" },
+                { question: "Quale strato si desquama?", options: ["Strato corneo", "Strato basale", "Strato spinoso", "Ipoderma"], correct: "Strato corneo" },
+                { question: "Cosa forma le impronte digitali?", options: ["Papille", "Fibre collagene", "Adipociti", "Melanociti"], correct: "Papille" },
+                { question: "Quale funzione è legata alle ghiandole sudoripare?", options: ["Termoregolazione", "Protezione", "Isolamento", "Sensibilità"], correct: "Termoregolazione" },
+                { question: "Quale strato ha vasi venosi?", options: ["Ipoderma", "Epidermide", "Strato corneo", "Strato basale"], correct: "Ipoderma" },
+                { question: "Quale elemento è unico per ogni persona?", options: ["Dermatoglifi", "Fibre elastiche", "Ghiandole sudoripare", "Melanociti"], correct: "Dermatoglifi" },
+                { question: "Quale strato ha desmosomi?", options: ["Strato basale", "Strato spinoso", "Strato corneo", "Strato reticolare"], correct: "Strato basale" },
+                { question: "Quale strato funge da cuscinetto?", options: ["Ipoderma", "Epidermide", "Derma", "Strato corneo"], correct: "Ipoderma" },
+                { question: "Quale annesso cutaneo lubrifica la pelle?", options: ["Ghiandole sebacee", "Unghie", "Capelli", "Ghiandole sudoripare"], correct: "Ghiandole sebacee" },
+                { question: "Quale strato contiene terminazioni nervose tattili?", options: ["Derma", "Epidermide", "Ipoderma", "Strato corneo"], correct: "Derma" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>

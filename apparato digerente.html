@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sull'apparato digerente per l'Operatore Socio-Sanitario (OSS): scopri organi, funzioni e quiz interattivi.">
+    <meta name="keywords" content="apparato digerente, OSS, bocca, stomaco, intestino, quiz digerente">
+    <title>L'Apparato Digerente</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>L'Apparato Digerente</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#bocca">Bocca</a>
+        <a href="#epiglottide">Epiglottide</a>
+        <a href="#faringe">Faringe</a>
+        <a href="#esofago">Esofago</a>
+        <a href="#stomaco">Stomaco</a>
+        <a href="#fegato">Fegato</a>
+        <a href="#pancreas">Pancreas</a>
+        <a href="#intestino-tenue">Intestino Tenue</a>
+        <a href="#intestino-crasso">Intestino Crasso</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione all'Apparato Digerente</h2>
+            <p>L’apparato digerente è l’insieme degli organi e delle strutture deputate all’assunzione, all’elaborazione e all’assorbimento dei cibi e all’eliminazione delle parti di cibo non digerite (residui). È formato da: bocca, epiglottide, faringe, esofago, stomaco, fegato, pancreas, intestino tenue e intestino crasso.</p>
+        </section>
+
+        <section id="bocca">
+            <h2>La Bocca</h2>
+            <p>La bocca è l’apertura del canale digerente sull’ambiente esterno e la cavità che la contiene. È sorretta da un arco scheletrico articolato in mascella (superiore) e mandibola (inferiore), dotate di denti. È delimitata anteriormente dalle labbra e posteriormente dalla gola. Svolge funzioni digestive, respiratorie, fonatorie e gustative, ed è lubrificata dalle ghiandole salivari.</p>
+            <p>Strutture: labbro superiore, gengiva superiore, arcata dentaria superiore, palato (duro e molle), ugola, tonsille, lingua, arcata dentaria inferiore, gengiva inferiore, labbro inferiore.</p>
+            <p><strong>Funzioni:</strong></p>
+            <ul>
+                <li><strong>Digestive:</strong> Masticazione e saliva trasformano il cibo in bolo alimentare.</li>
+                <li><strong>Respiratorie:</strong> Permette l’ingresso dell’aria nella laringe.</li>
+                <li><strong>Fonatorie:</strong> Modula i suoni emessi dalla laringe.</li>
+                <li><strong>Gustative:</strong> Sede del gusto grazie alle papille gustative sulla lingua.</li>
+            </ul>
+        </section>
+
+        <section id="epiglottide">
+            <h2>L’Epiglottide</h2>
+            <p>L’epiglottide è una cartilagine elastica ricoperta di mucosa alla radice della lingua, parte della laringe. Ha forma di foglia, con un peduncolo inferiore connesso alla cartilagine tiroidea e un’estremità superiore libera. Durante la deglutizione si abbassa, chiudendo la laringe per impedire al bolo alimentare di entrare nelle vie aeree.</p>
+            <p><strong>A cosa serve?</strong> Impedisce che cibo e saliva vadano “di traverso”.</p>
+        </section>
+
+        <section id="faringe">
+            <h2>La Faringe</h2>
+            <p>La faringe è un canale muscolo-mucoso che collega la gola all’esofago. Riceve il bolo alimentare dalla bocca e l’aria dal naso, fungendo da incrocio tra vie digestive e respiratorie, che poi si separano in esofago e laringe.</p>
+        </section>
+
+        <section id="esofago">
+            <h2>L’Esofago</h2>
+            <p>L’esofago è la porzione muscolo-mucosa del canale digerente tra faringe e stomaco. Trasporta il bolo alimentare grazie alla contrazione muscolare. Ha una tunica esterna connettivale, una muscolare (fasci striati e lisci), uno strato sottomucoso con ghiandole mucose e una mucosa con epitelio pluristratificato.</p>
+            <p><strong>A cosa serve?</strong> Permette il passaggio del bolo dalla bocca allo stomaco tramite sfinteri (superiore e inferiore/cardias).</p>
+        </section>
+
+        <section id="stomaco">
+            <h2>Lo Stomaco</h2>
+            <p>Lo stomaco, situato a sinistra nella parte superiore dell’addome, è un sacco elastico (25-28 cm) che riceve il cibo dall’esofago tramite il cardias e lo invia all’intestino tenue tramite il piloro. Ha tre strati: mucosa gastrica (secerne succhi gastrici e muco), tonaca muscolare (rimescola il cibo), tonaca sierosa (rivestimento esterno).</p>
+            <p><strong>A cosa serve?</strong> Inizia la digestione di grassi e proteine, trasformando il cibo in chimo.</p>
+        </section>
+
+        <section id="fegato">
+            <h2>Il Fegato</h2>
+            <p>Il fegato è una ghiandola di 1-1,5 kg, situata a destra sotto il diaframma. Composto da quattro lobi, è irrorato dall’arteria epatica. Gli epatociti svolgono funzioni metaboliche, mentre le cellule stellate supportano la rigenerazione.</p>
+            <p><strong>A cosa serve?</strong> Produce bile per digerire i grassi, immagazzina glicogeno, filtra tossine e supporta il sistema immunitario.</p>
+        </section>
+
+        <section id="pancreas">
+            <h2>Il Pancreas</h2>
+            <p>Il pancreas è una ghiandola (15 cm, 70-80 g) dietro lo stomaco, con funzioni endocrine (insulina, glucagone) ed esocrine (succo pancreatico). Ha testa, collo, corpo e coda, con dotti che riversano enzimi nel duodeno.</p>
+            <p><strong>A cosa serve?</strong> Secerne succhi digestivi (esocrina) e regola la glicemia (endocrina).</p>
+        </section>
+
+        <section id="intestino-tenue">
+            <h2>L’Intestino Tenue</h2>
+            <p>L’intestino tenue (7 m) si divide in duodeno, digiuno e ileo, sfociando nel crasso tramite la valvola ileo-cecale. La mucosa ha villi e pliche circolari per l’assorbimento.</p>
+            <p><strong>A cosa serve?</strong> Completa la digestione e assorbe i nutrienti.</p>
+        </section>
+
+        <section id="intestino-crasso">
+            <h2>L’Intestino Crasso</h2>
+            <p>L’intestino crasso (1,5 m) va dalla valvola ileo-cecale all’ano, con cieco, colon e retto. Ha un calibro variabile (28-14 cm).</p>
+            <p><strong>A cosa serve?</strong> Assorbe acqua ed elettroliti, fermenta scarti ed evacua le feci.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sull'Apparato Digerente</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 L'Apparato Digerente - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Qual è la funzione principale dell’apparato digerente?", options: ["Assorbire nutrienti", "Circolare sangue", "Respirare", "Filtrare tossine"], correct: "Assorbire nutrienti" },
+                { question: "Quale organo è l’apertura del canale digerente?", options: ["Bocca", "Faringe", "Esofago", "Stomaco"], correct: "Bocca" },
+                { question: "Cosa impedisce al cibo di entrare nelle vie aeree?", options: ["Epiglottide", "Lingua", "Faringe", "Esofago"], correct: "Epiglottide" },
+                { question: "Quale struttura collega la gola all’esofago?", options: ["Faringe", "Epiglottide", "Bocca", "Stomaco"], correct: "Faringe" },
+                { question: "Dove passa il bolo alimentare dopo la faringe?", options: ["Esofago", "Stomaco", "Fegato", "Pancreas"], correct: "Esofago" },
+                { question: "Quale organo inizia la digestione delle proteine?", options: ["Stomaco", "Bocca", "Intestino tenue", "Fegato"], correct: "Stomaco" },
+                { question: "Quale ghiandola produce la bile?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale organo secerne il succo pancreatico?", options: ["Pancreas", "Fegato", "Stomaco", "Intestino tenue"], correct: "Pancreas" },
+                { question: "Dove avviene l’assorbimento dei nutrienti?", options: ["Intestino tenue", "Stomaco", "Intestino crasso", "Esofago"], correct: "Intestino tenue" },
+                { question: "Quale organo assorbe acqua ed elettroliti?", options: ["Intestino crasso", "Intestino tenue", "Stomaco", "Fegato"], correct: "Intestino crasso" },
+                { question: "Quale struttura della bocca percepisce il gusto?", options: ["Lingua", "Denti", "Palato", "Gengive"], correct: "Lingua" },
+                { question: "Quale parte dell’epiglottide si collega alla laringe?", options: ["Peduncolo", "Margine superiore", "Pieghe laterali", "Base"], correct: "Peduncolo" },
+                { question: "Quale funzione NON appartiene alla faringe?", options: ["Digestione enzimatica", "Passaggio bolo", "Vie aeree", "Deglutizione"], correct: "Digestione enzimatica" },
+                { question: "Quale strato dell’esofago contiene ghiandole mucose?", options: ["Sottomucosa", "Tunica muscolare", "Tunica esterna", "Mucosa"], correct: "Sottomucosa" },
+                { question: "Quale sfintere collega esofago e stomaco?", options: ["Cardias", "Piloro", "Bocca esofago", "Valvola ileo-cecale"], correct: "Cardias" },
+                { question: "Quale strato dello stomaco secerne succhi gastrici?", options: ["Mucosa", "Muscolare", "Sierosa", "Sottomucosa"], correct: "Mucosa" },
+                { question: "Quale parte del fegato rigenera il tessuto?", options: ["Cellule stellate", "Epatociti", "Cellule di Kupffer", "Arteria epatica"], correct: "Cellule stellate" },
+                { question: "Quale ormone produce il pancreas?", options: ["Insulina", "Bile", "Pepsina", "Secretina"], correct: "Insulina" },
+                { question: "Quale porzione dell’intestino tenue è a forma di C?", options: ["Duodeno", "Digiuno", "Ileo", "Colon"], correct: "Duodeno" },
+                { question: "Quale valvola separa intestino tenue e crasso?", options: ["Ileo-cecale", "Piloro", "Cardias", "Sfintere anale"], correct: "Ileo-cecale" },
+                { question: "Quale funzione della bocca è legata alla saliva?", options: ["Digestiva", "Respiratoria", "Fonatoria", "Motoria"], correct: "Digestiva" },
+                { question: "Dove si trova l’epiglottide?", options: ["Radice della lingua", "Faringe", "Esofago", "Stomaco"], correct: "Radice della lingua" },
+                { question: "Quale organo è muscolo-mucoso oltre all’esofago?", options: ["Faringe", "Bocca", "Stomaco", "Fegato"], correct: "Faringe" },
+                { question: "Quale patologia è tipica dell’esofago?", options: ["Reflusso gastroesofageo", "Cirrosi", "Epatite", "Ulcera"], correct: "Reflusso gastroesofageo" },
+                { question: "Quale parte dello stomaco è vicina al piloro?", options: ["Antro pilorico", "Fondo", "Corpo", "Cardias"], correct: "Antro pilorico" },
+                { question: "Quale sostanza produce il fegato per i grassi?", options: ["Bile", "Succo gastrico", "Insulina", "Amilasi"], correct: "Bile" },
+                { question: "Quale dotto pancreatico sbocca nel duodeno?", options: ["Wirsung", "Santorini", "Epatico", "Biliare"], correct: "Wirsung" },
+                { question: "Cosa amplia la superficie dell’intestino tenue?", options: ["Villi intestinali", "Pliche gastriche", "Colon", "Cieco"], correct: "Villi intestinali" },
+                { question: "Quale parte dell’intestino crasso è a fondo cieco?", options: ["Cieco", "Colon", "Retto", "Duodeno"], correct: "Cieco" },
+                { question: "Quale vitamina è assorbita dall’intestino crasso?", options: ["Vitamina K", "Vitamina C", "Vitamina A", "Vitamina D"], correct: "Vitamina K" }
+            ],
+            // Quiz 2
+            [
+                { question: "Cosa elimina l’apparato digerente?", options: ["Residui non digeriti", "Ossigeno", "Sangue", "Tossine"], correct: "Residui non digeriti" },
+                { question: "Quale organo contiene le papille gustative?", options: ["Lingua", "Palato", "Denti", "Faringe"], correct: "Lingua" },
+                { question: "Quale cartilagine chiude la laringe?", options: ["Epiglottide", "Tiroidea", "Aritenoide", "Cricoide"], correct: "Epiglottide" },
+                { question: "Dove confluiscono le vie aeree e digestive?", options: ["Faringe", "Esofago", "Stomaco", "Bocca"], correct: "Faringe" },
+                { question: "Quale organo trasporta il bolo allo stomaco?", options: ["Esofago", "Faringe", "Fegato", "Pancreas"], correct: "Esofago" },
+                { question: "Quale organo produce il chimo?", options: ["Stomaco", "Bocca", "Intestino tenue", "Fegato"], correct: "Stomaco" },
+                { question: "Quale ghiandola immagazzina glicogeno?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale organo regola la glicemia?", options: ["Pancreas", "Fegato", "Stomaco", "Intestino tenue"], correct: "Pancreas" },
+                { question: "Quale parte dell’intestino è lunga 7 metri?", options: ["Tenue", "Crasso", "Colon", "Retto"], correct: "Tenue" },
+                { question: "Quale organo termina con l’ano?", options: ["Intestino crasso", "Intestino tenue", "Stomaco", "Esofago"], correct: "Intestino crasso" },
+                { question: "Quale struttura della bocca lubrifica?", options: ["Ghiandole salivari", "Tonsille", "Ugola", "Denti"], correct: "Ghiandole salivari" },
+                { question: "Quale parte dell’epiglottide è libera?", options: ["Estremità superiore", "Peduncolo", "Margini laterali", "Base"], correct: "Estremità superiore" },
+                { question: "Quale funzione della faringe è respiratoria?", options: ["Passaggio aria", "Digestione", "Masticazione", "Assorbimento"], correct: "Passaggio aria" },
+                { question: "Quale strato dell’esofago è muscolare?", options: ["Tunica muscolare", "Sottomucosa", "Tunica esterna", "Mucosa"], correct: "Tunica muscolare" },
+                { question: "Quale sfintere apre l’esofago?", options: ["Bocca esofago", "Cardias", "Piloro", "Ileo-cecale"], correct: "Bocca esofago" },
+                { question: "Quale parte dello stomaco è un serbatoio?", options: ["Corpo", "Fondo", "Antro pilorico", "Cardias"], correct: "Corpo" },
+                { question: "Quale cellula del fegato filtra il sangue?", options: ["Cellule di Kupffer", "Epatociti", "Cellule stellate", "Arteria epatica"], correct: "Cellule di Kupffer" },
+                { question: "Quale enzima pancreatico digerisce i grassi?", options: ["Lipasi", "Amilasi", "Pepsina", "Bile"], correct: "Lipasi" },
+                { question: "Quale porzione dell’intestino tenue segue il duodeno?", options: ["Digiuno", "Ileo", "Cieco", "Colon"], correct: "Digiuno" },
+                { question: "Quale parte del colon è finale?", options: ["Retto", "Cieco", "Colon", "Duodeno"], correct: "Retto" },
+                { question: "Quale funzione della bocca modula i suoni?", options: ["Fonatoria", "Digestiva", "Respiratoria", "Gustativa"], correct: "Fonatoria" },
+                { question: "Quale legamento collega l’epiglottide?", options: ["Tiroepiglottico", "Aritenoideo", "Cricoideo", "Vocale"], correct: "Tiroepiglottico" },
+                { question: "Dove passa l’aria dopo la faringe?", options: ["Laringe", "Esofago", "Stomaco", "Bocca"], correct: "Laringe" },
+                { question: "Quale strato dello stomaco è esterno?", options: ["Sierosa", "Mucosa", "Muscolare", "Sottomucosa"], correct: "Sierosa" },
+                { question: "Quale sostanza del fegato emulsiona i grassi?", options: ["Bile", "Glicogeno", "Insulina", "Pepsina"], correct: "Bile" },
+                { question: "Quale parte del pancreas è vicina alla milza?", options: ["Coda", "Testa", "Collo", "Corpo"], correct: "Coda" },
+                { question: "Quale struttura dell’intestino tenue assorbe il ferro?", options: ["Duodeno", "Digiuno", "Ileo", "Cieco"], correct: "Duodeno" },
+                { question: "Quale parte dell’intestino crasso accumula scarti?", options: ["Colon", "Cieco", "Retto", "Duodeno"], correct: "Colon" },
+                { question: "Quale elettrolita è assorbito dal crasso?", options: ["Sodio", "Calcio", "Ferro", "Zinco"], correct: "Sodio" },
+                { question: "Quale organo è sotto il diaframma?", options: ["Fegato", "Pancreas", "Esofago", "Faringe"], correct: "Fegato" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale processo NON avviene nell’apparato digerente?", options: ["Circolazione", "Digestione", "Assorbimento", "Eliminazione"], correct: "Circolazione" },
+                { question: "Quale organo ha arcate dentarie?", options: ["Bocca", "Faringe", "Esofago", "Stomaco"], correct: "Bocca" },
+                { question: "Cosa si abbassa durante la deglutizione?", options: ["Epiglottide", "Lingua", "Palato", "Ugola"], correct: "Epiglottide" },
+                { question: "Quale organo è un incrocio tra vie aeree e digestive?", options: ["Faringe", "Esofago", "Stomaco", "Laringe"], correct: "Faringe" },
+                { question: "Quale organo ha uno sfintere inferiore?", options: ["Esofago", "Faringe", "Bocca", "Intestino"], correct: "Esofago" },
+                { question: "Quale organo ha la mucosa gastrica?", options: ["Stomaco", "Esofago", "Intestino tenue", "Fegato"], correct: "Stomaco" },
+                { question: "Quale ghiandola è la più grande del corpo?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale organo produce glucagone?", options: ["Pancreas", "Fegato", "Stomaco", "Intestino tenue"], correct: "Pancreas" },
+                { question: "Quale parte dell’intestino ha villi?", options: ["Tenue", "Crasso", "Colon", "Retto"], correct: "Tenue" },
+                { question: "Quale organo evacua le feci?", options: ["Intestino crasso", "Intestino tenue", "Stomaco", "Esofago"], correct: "Intestino crasso" },
+                { question: "Quale parte della bocca è molle?", options: ["Palato", "Denti", "Gengive", "Lingua"], correct: "Palato" },
+                { question: "Quale margine dell’epiglottide è dentellato?", options: ["Laterale", "Superiore", "Inferiore", "Base"], correct: "Laterale" },
+                { question: "Quale organo riceve il bolo dalla bocca?", options: ["Faringe", "Esofago", "Stomaco", "Fegato"], correct: "Faringe" },
+                { question: "Quale strato dell’esofago è epiteliale?", options: ["Mucosa", "Sottomucosa", "Muscolare", "Esterna"], correct: "Mucosa" },
+                { question: "Quale valvola regola lo svuotamento dello stomaco?", options: ["Piloro", "Cardias", "Ileo-cecale", "Sfintere anale"], correct: "Piloro" },
+                { question: "Quale parte dello stomaco produce muco?", options: ["Antro pilorico", "Fondo", "Corpo", "Cardias"], correct: "Antro pilorico" },
+                { question: "Quale cellula del fegato metabolizza?", options: ["Epatociti", "Cellule stellate", "Cellule di Kupffer", "Arteria epatica"], correct: "Epatociti" },
+                { question: "Quale parte del pancreas è voluminosa?", options: ["Testa", "Coda", "Collo", "Corpo"], correct: "Testa" },
+                { question: "Quale porzione dell’intestino tenue ha più pliche?", options: ["Digiuno", "Duodeno", "Ileo", "Colon"], correct: "Digiuno" },
+                { question: "Quale parte del crasso ha l’ampolla rettale?", options: ["Retto", "Cieco", "Colon", "Duodeno"], correct: "Retto" },
+                { question: "Quale funzione della bocca è respiratoria?", options: ["Inspirazione", "Masticazione", "Deglutizione", "Gusto"], correct: "Inspirazione" },
+                { question: "Quale struttura dell’epiglottide si estende alle aritenoidi?", options: ["Pieghe ariepiglottiche", "Peduncolo", "Margini laterali", "Base"], correct: "Pieghe ariepiglottiche" },
+                { question: "Dove va il bolo dopo l’esofago?", options: ["Stomaco", "Faringe", "Intestino", "Fegato"], correct: "Stomaco" },
+                { question: "Quale strato dello stomaco rimescola il cibo?", options: ["Muscolare", "Mucosa", "Sierosa", "Sottomucosa"], correct: "Muscolare" },
+                { question: "Quale organo filtra le tossine?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale dotto pancreatico è accessorio?", options: ["Santorini", "Wirsung", "Epatico", "Biliare"], correct: "Santorini" },
+                { question: "Quale sostanza assorbe il duodeno?", options: ["Calcio", "Sodio", "Vitamina K", "Zuccheri"], correct: "Calcio" },
+                { question: "Quale parte dell’intestino crasso fermenta?", options: ["Colon", "Cieco", "Retto", "Duodeno"], correct: "Colon" },
+                { question: "Quale organo è lungo 25-28 cm?", options: ["Stomaco", "Esofago", "Fegato", "Pancreas"], correct: "Stomaco" },
+                { question: "Quale ghiandola è dietro lo stomaco?", options: ["Pancreas", "Fegato", "Intestino", "Faringe"], correct: "Pancreas" }
+            ],
+            // Quiz 4
+            [
+                { question: "Cosa assorbe l’apparato digerente?", options: ["Nutrienti", "Ossigeno", "Sangue", "Tossine"], correct: "Nutrienti" },
+                { question: "Quale organo mastica il cibo?", options: ["Bocca", "Stomaco", "Esofago", "Faringe"], correct: "Bocca" },
+                { question: "Quale struttura protegge le vie aeree?", options: ["Epiglottide", "Faringe", "Lingua", "Esofago"], correct: "Epiglottide" },
+                { question: "Quale organo è muscolo-mucoso con la faringe?", options: ["Esofago", "Stomaco", "Bocca", "Fegato"], correct: "Esofago" },
+                { question: "Dove inizia la digestione enzimatica?", options: ["Stomaco", "Bocca", "Intestino tenue", "Fegato"], correct: "Stomaco" },
+                { question: "Quale organo è un sacco elastico?", options: ["Stomaco", "Esofago", "Intestino tenue", "Fegato"], correct: "Stomaco" },
+                { question: "Quale ghiandola emulsiona i grassi?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale organo ha isole di Langerhans?", options: ["Pancreas", "Fegato", "Stomaco", "Intestino tenue"], correct: "Pancreas" },
+                { question: "Quale parte dell’intestino completa la digestione?", options: ["Tenue", "Crasso", "Colon", "Retto"], correct: "Tenue" },
+                { question: "Quale organo ha il canale anale?", options: ["Intestino crasso", "Intestino tenue", "Stomaco", "Esofago"], correct: "Intestino crasso" },
+                { question: "Quale parte della bocca è superiore?", options: ["Mascella", "Mandibola", "Lingua", "Tonsille"], correct: "Mascella" },
+                { question: "Quale forma ha l’epiglottide?", options: ["Foglia", "Tubo", "Sacco", "Cono"], correct: "Foglia" },
+                { question: "Quale organo separa esofago e laringe?", options: ["Faringe", "Epiglottide", "Stomaco", "Bocca"], correct: "Faringe" },
+                { question: "Quale strato dell’esofago è esterno?", options: ["Tunica esterna", "Sottomucosa", "Muscolare", "Mucosa"], correct: "Tunica esterna" },
+                { question: "Quale parte dello stomaco è vicina al cardias?", options: ["Antro cardiale", "Fondo", "Corpo", "Piloro"], correct: "Antro cardiale" },
+                { question: "Quale strato dello stomaco è acido?", options: ["Mucosa", "Muscolare", "Sierosa", "Sottomucosa"], correct: "Mucosa" },
+                { question: "Quale parte del fegato produce bile?", options: ["Epatociti", "Cellule stellate", "Cellule di Kupffer", "Arteria epatica"], correct: "Epatociti" },
+                { question: "Quale ormone pancreatico è ipoglicemizzante?", options: ["Insulina", "Glucagone", "Somatostatina", "Bile"], correct: "Insulina" },
+                { question: "Quale porzione dell’intestino tenue è finale?", options: ["Ileo", "Duodeno", "Digiuno", "Colon"], correct: "Ileo" },
+                { question: "Quale parte del crasso è iniziale?", options: ["Cieco", "Colon", "Retto", "Duodeno"], correct: "Cieco" },
+                { question: "Quale funzione della bocca frammenta il cibo?", options: ["Digestiva", "Fonatoria", "Respiratoria", "Gustativa"], correct: "Digestiva" },
+                { question: "Quale organo è sopra l’esofago?", options: ["Faringe", "Stomaco", "Fegato", "Pancreas"], correct: "Faringe" },
+                { question: "Quale strato dell’esofago ha fasci striati?", options: ["Muscolare", "Sottomucosa", "Tunica esterna", "Mucosa"], correct: "Muscolare" },
+                { question: "Quale organo produce pepsina?", options: ["Stomaco", "Fegato", "Pancreas", "Intestino"], correct: "Stomaco" },
+                { question: "Quale parte del fegato è sotto il diaframma?", options: ["Tutti i lobi", "Epatociti", "Cellule stellate", "Arteria epatica"], correct: "Tutti i lobi" },
+                { question: "Quale parte del pancreas è uncinata?", options: ["Testa", "Coda", "Collo", "Corpo"], correct: "Testa" },
+                { question: "Quale struttura dell’intestino tenue ha pliche circolari?", options: ["Mucosa", "Villi", "Digiuno", "Ileo"], correct: "Mucosa" },
+                { question: "Quale parte dell’intestino crasso è lunga 1,5 m?", options: ["Colon", "Cieco", "Retto", "Tutto il crasso"], correct: "Tutto il crasso" },
+                { question: "Quale organo ha la valvola di Bauhin?", options: ["Intestino crasso", "Intestino tenue", "Stomaco", "Esofago"], correct: "Intestino crasso" },
+                { question: "Quale ghiandola è lunga 15 cm?", options: ["Pancreas", "Fegato", "Stomaco", "Intestino"], correct: "Pancreas" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale organo elabora il cibo?", options: ["Stomaco", "Bocca", "Esofago", "Faringe"], correct: "Stomaco" },
+                { question: "Quale struttura ha le tonsille?", options: ["Bocca", "Faringe", "Esofago", "Stomaco"], correct: "Bocca" },
+                { question: "Quale organo si rovescia all’indietro?", options: ["Epiglottide", "Lingua", "Faringe", "Esofago"], correct: "Epiglottide" },
+                { question: "Quale organo riceve aria dal naso?", options: ["Faringe", "Esofago", "Stomaco", "Laringe"], correct: "Faringe" },
+                { question: "Quale organo ha il cardias?", options: ["Esofago", "Stomaco", "Faringe", "Intestino"], correct: "Esofago" },
+                { question: "Quale organo digerisce i grassi?", options: ["Fegato", "Stomaco", "Pancreas", "Intestino tenue"], correct: "Fegato" },
+                { question: "Quale ghiandola ha quattro lobi?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale organo secerne amilasi?", options: ["Pancreas", "Fegato", "Stomaco", "Bocca"], correct: "Pancreas" },
+                { question: "Quale parte dell’intestino ha il duodeno?", options: ["Tenue", "Crasso", "Colon", "Retto"], correct: "Tenue" },
+                { question: "Quale organo ha il retto?", options: ["Intestino crasso", "Intestino tenue", "Stomaco", "Esofago"], correct: "Intestino crasso" },
+                { question: "Quale parte della bocca è inferiore?", options: ["Mandibola", "Mascella", "Palato", "Ugola"], correct: "Mandibola" },
+                { question: "Quale organo è alla radice della lingua?", options: ["Epiglottide", "Faringe", "Esofago", "Stomaco"], correct: "Epiglottide" },
+                { question: "Quale strato dell’esofago è interno?", options: ["Mucosa", "Sottomucosa", "Muscolare", "Esterna"], correct: "Mucosa" },
+                { question: "Quale parte dello stomaco è superiore?", options: ["Fondo", "Corpo", "Antro pilorico", "Cardias"], correct: "Fondo" },
+                { question: "Quale strato dello stomaco protegge dalla digestione?", options: ["Mucosa", "Muscolare", "Sierosa", "Sottomucosa"], correct: "Mucosa" },
+                { question: "Quale cellula del fegato rigenera?", options: ["Cellule stellate", "Epatociti", "Cellule di Kupffer", "Arteria epatica"], correct: "Cellule stellate" },
+                { question: "Quale ormone pancreatico è iperglicemizzante?", options: ["Glucagone", "Insulina", "Somatostatina", "Bile"], correct: "Glucagone" },
+                { question: "Quale porzione dell’intestino tenue produce secretina?", options: ["Duodeno", "Digiuno", "Ileo", "Colon"], correct: "Duodeno" },
+                { question: "Quale parte del crasso è terminale?", options: ["Retto", "Cieco", "Colon", "Duodeno"], correct: "Retto" },
+                { question: "Quale funzione della bocca percepisce i sapori?", options: ["Gustativa", "Digestiva", "Respiratoria", "Fonatoria"], correct: "Gustativa" },
+                { question: "Quale organo è tra faringe e stomaco?", options: ["Esofago", "Fegato", "Pancreas", "Intestino"], correct: "Esofago" },
+                { question: "Quale strato dello stomaco ha fibre oblique?", options: ["Muscolare", "Mucosa", "Sierosa", "Sottomucosa"], correct: "Muscolare" },
+                { question: "Quale organo immagazzina vitamina B12?", options: ["Fegato", "Pancreas", "Stomaco", "Intestino"], correct: "Fegato" },
+                { question: "Quale parte del pancreas è centrale?", options: ["Corpo", "Testa", "Coda", "Collo"], correct: "Corpo" },
+                { question: "Quale struttura dell’intestino tenue amplifica l’assorbimento?", options: ["Pliche circolari", "Villi", "Mucosa", "Digiuno"], correct: "Pliche circolari" },
+                { question: "Quale parte dell’intestino crasso ha calibro 28 cm?", options: ["Cieco", "Colon", "Retto", "Duodeno"], correct: "Cieco" },
+                { question: "Quale organo produce succhi gastrici?", options: ["Stomaco", "Fegato", "Pancreas", "Intestino"], correct: "Stomaco" },
+                { question: "Quale ghiandola è trasversale?", options: ["Pancreas", "Fegato", "Stomaco", "Intestino"], correct: "Pancreas" },
+                { question: "Quale parte dell’intestino tenue è lunga 25 cm?", options: ["Duodeno", "Digiuno", "Ileo", "Colon"], correct: "Duodeno" },
+                { question: "Quale organo è a sinistra dell’addome?", options: ["Stomaco", "Fegato", "Esofago", "Faringe"], correct: "Stomaco" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>

@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sull'apparato circolatorio per l'Operatore Socio-Sanitario (OSS): scopri cuore, vasi sanguigni e quiz interattivi.">
+    <meta name="keywords" content="apparato circolatorio, OSS, arterie, capillari, vene, quiz circolatorio">
+    <title>L'Apparato Circolatorio</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>L'Apparato Circolatorio</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#arterie">Arterie</a>
+        <a href="#capillari">Capillari</a>
+        <a href="#vene">Vene</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione all'Apparato Circolatorio</h2>
+            <p>È l’insieme degli organi che permettono la circolazione del sangue nell’organismo per rifornire le cellule di nutrienti e ossigeno e consentire l’eliminazione dell’anidride carbonica e di altri prodotti di scarto. È un sistema chiuso di vasi (i vasi sanguigni) in cui il sangue circola sotto la spinta del cuore.</p>
+            <p>A formarlo sono due componenti principali: il circolo sistemico e il piccolo circolo (detto anche circolo polmonare). Ognuna di queste componenti è formata da arterie, capillari e vene.</p>
+            <p>Nel caso della circolazione sistemica il sangue proveniente dai polmoni, ricco di ossigeno e di nutrienti, viene pompato dal ventricolo sinistro all’interno dell’aorta, che lo distribuisce al resto del corpo. Una volta che il sangue si è arricchito di anidride carbonica e prodotti di scarto viene riversato dalla vena cava all’atrio destro. La circolazione polmonare forma invece un circuito chiuso tra il cuore e i polmoni e ha inizio nel ventricolo destro, da cui il sangue ricco di anidride carbonica raccolto dall’atrio destro, con cui comunica attraverso la valvola tricuspide, viene pompato nell’arteria polmonare, che si divide in due rami verso i polmoni. Qui i capillari raccolgono l’ossigeno a livello degli alveoli. Il sangue ossigenato confluisce nelle vene polmonari, che lo riversano nell’atrio sinistro, da cui passa nel ventricolo sinistro attraverso la valvola mitrale.</p>
+        </section>
+
+        <section id="arterie">
+            <h2>Le Arterie</h2>
+            <p>Le arterie sono i vasi sanguigni deputati al trasporto del sangue dal cuore a tutti i tessuti e organi del corpo umano (direzione centrifuga). A eccezione delle arterie polmonari, che trasportano sangue carico di anidride carbonica e prodotti di scarto, tutte le arterie trasportano sangue ossigenato.</p>
+            <p>Le pareti delle arterie sono composte da tre tuniche: una tunica esterna elastica di natura connettivale, una tunica media di fibre muscolari lisce e una tunica interna con fibre elastiche a contatto col sangue. Le arterie si ramificano in arteriole (diametro <3 mm), che precedono i capillari.</p>
+            <h3>Il Sistema Arterioso</h3>
+            <p>Il sistema arterioso è la parte ad alta pressione del sistema circolatorio, formato da:</p>
+            <ul>
+                <li><strong>Arteria aorta</strong>: Origina dal ventricolo sinistro, sale come aorta ascendente, forma l’arco aortico, scende come aorta toracica e addominale, e si biforca nelle arterie iliache comuni alla quarta vertebra lombare.</li>
+                <li><strong>Arterie sistemiche</strong>: Trasportano sangue ossigenato a organi e tessuti, con rami come arteria omerale, femorale e carotidea.</li>
+                <li><strong>Arterie polmonari</strong>: Trasportano sangue ricco di anidride carbonica dal cuore ai polmoni, parte della piccola circolazione.</li>
+            </ul>
+            <p><strong>A cosa servono?</strong> Trasportano il sangue dal cuore a tutti i tessuti e organi del corpo umano.</p>
+        </section>
+
+        <section id="capillari">
+            <h2>I Capillari</h2>
+            <p>I capillari sono i più piccoli vasi sanguigni, in cui si diramano arterie e vene. Di forma cilindrica e dimensioni microscopiche, furono scoperti da Marcello Malpighi nel XVII secolo.</p>
+            <p>Sia il sistema arterioso che quello venoso terminano nei capillari, che si distribuiscono dalle arteriole tra le cellule dei tessuti, per poi raccogliersi in venule e vene. Sono il sito degli scambi metabolici e respiratori tra sangue e liquido intercellulare, grazie alle pareti di un solo strato di cellule endoteliali appiattite, molto permeabili.</p>
+            <p>Il diametro varia: 5-8 µm (polmoni, retina, muscoli striati) fino a 12-30 µm (ghiandole, midollo osseo). Esistono anche reti mirabili arteriose (tra arterie) e venose (tra vene).</p>
+            <p><strong>A cosa servono?</strong> Garantiscono gli scambi metabolici e respiratori per rifornire i tessuti di ossigeno e nutrienti e rimuovere le sostanze di scarto.</p>
+        </section>
+
+        <section id="vene">
+            <h2>Le Vene</h2>
+            <p>Le vene sono i vasi sanguigni deputati al trasporto del sangue dai distretti corporei periferici verso il cuore (direzione centripeta). A eccezione delle vene polmonari, che trasportano sangue ossigenato, tutte le vene trasportano sangue carico di anidride carbonica e prodotti di scarto.</p>
+            <p>Le pareti delle vene, formate da tre tuniche (esterna, media, interna), sono più sottili delle arterie, con prevalenza muscolare su quella elastica. Si dividono in capillari venosi, venule, e vene di piccolo, medio e grande calibro.</p>
+            <h3>Il Sistema Venoso</h3>
+            <p>Le principali strutture del sistema venoso sono:</p>
+            <ul>
+                <li><strong>Vena cava superiore</strong>: Trasporta sangue povero di ossigeno dalla parte superiore del corpo (testa, collo, arti superiori) al cuore; lunga 7 cm, diametro 22 mm.</li>
+                <li><strong>Vena cava inferiore</strong>: Il più grosso tronco venoso, trasporta sangue dalla parte inferiore del corpo (arti inferiori, organi sotto il diaframma); lunga 22 cm, diametro 30 mm.</li>
+                <li><strong>Vene polmonari</strong>: Trasportano sangue ossigenato dai polmoni all’atrio sinistro, parte della piccola circolazione.</li>
+            </ul>
+            <p><strong>A cosa servono?</strong> Portano il sangue dai distretti corporei periferici verso il cuore.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sull'Apparato Circolatorio</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 L'Apparato Circolatorio - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Qual è la funzione principale dell’apparato circolatorio?", options: ["Rifornire cellule di nutrienti e ossigeno", "Digerire il cibo", "Proteggere il corpo", "Regolare la temperatura"], correct: "Rifornire cellule di nutrienti e ossigeno" },
+                { question: "Quali sono le due componenti principali dell’apparato circolatorio?", options: ["Circolo sistemico e polmonare", "Arterie e vene", "Cuore e polmoni", "Capillari e venule"], correct: "Circolo sistemico e polmonare" },
+                { question: "Cosa spinge il sangue nei vasi sanguigni?", options: ["Cuore", "Polmoni", "Muscoli", "Capillari"], correct: "Cuore" },
+                { question: "Quali vasi trasportano sangue dal cuore?", options: ["Arterie", "Vene", "Capillari", "Venule"], correct: "Arterie" },
+                { question: "Quali vasi hanno pareti sottili e permeabili?", options: ["Capillari", "Arterie", "Vene", "Arteriole"], correct: "Capillari" },
+                { question: "Dove inizia la circolazione sistemica?", options: ["Ventricolo sinistro", "Atrio destro", "Ventricolo destro", "Atrio sinistro"], correct: "Ventricolo sinistro" },
+                { question: "Quale arteria distribuisce sangue al corpo?", options: ["Aorta", "Arteria polmonare", "Arteria carotidea", "Arteria femorale"], correct: "Aorta" },
+                { question: "Dove termina la circolazione sistemica?", options: ["Atrio destro", "Ventricolo sinistro", "Atrio sinistro", "Ventricolo destro"], correct: "Atrio destro" },
+                { question: "Dove inizia la circolazione polmonare?", options: ["Ventricolo destro", "Atrio sinistro", "Ventricolo sinistro", "Atrio destro"], correct: "Ventricolo destro" },
+                { question: "Quale valvola separa atrio e ventricolo destro?", options: ["Tricuspide", "Mitrale", "Aortica", "Polmonare"], correct: "Tricuspide" },
+                { question: "Quante tuniche formano le pareti delle arterie?", options: ["Tre", "Due", "Una", "Quattro"], correct: "Tre" },
+                { question: "Quale tunica delle arterie è a contatto col sangue?", options: ["Tunica interna", "Tunica media", "Tunica esterna", "Tunica elastica"], correct: "Tunica interna" },
+                { question: "Dove si biforca l’aorta nelle arterie iliache?", options: ["Quarta vertebra lombare", "Arco aortico", "Aorta toracica", "Ventricolo sinistro"], correct: "Quarta vertebra lombare" },
+                { question: "Quale arteria sistemica vascolarizza la testa?", options: ["Carotidea", "Omerale", "Femorale", "Polmonare"], correct: "Carotidea" },
+                { question: "Quale arteria trasporta sangue ricco di CO2?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Chi scoprì i capillari?", options: ["Marcello Malpighi", "William Harvey", "Galeno", "Leonardo da Vinci"], correct: "Marcello Malpighi" },
+                { question: "Quali vasi seguono i capillari nel flusso sanguigno?", options: ["Venule", "Arteriole", "Arterie", "Vene"], correct: "Venule" },
+                { question: "Dove avvengono gli scambi metabolici?", options: ["Capillari", "Arterie", "Vene", "Arteriole"], correct: "Capillari" },
+                { question: "Qual è il diametro dei capillari nei polmoni?", options: ["5-8 µm", "12-20 µm", "25-30 µm", "1-3 µm"], correct: "5-8 µm" },
+                { question: "Quali vasi trasportano sangue verso il cuore?", options: ["Vene", "Arterie", "Capillari", "Arteriole"], correct: "Vene" },
+                { question: "Quale vena trasporta sangue dalla parte superiore del corpo?", options: ["Vena cava superiore", "Vena cava inferiore", "Vene polmonari", "Vena femorale"], correct: "Vena cava superiore" },
+                { question: "Quale vena è la più grande del corpo umano?", options: ["Vena cava inferiore", "Vena cava superiore", "Vene polmonari", "Vena omerale"], correct: "Vena cava inferiore" },
+                { question: "Quale vena trasporta sangue ossigenato?", options: ["Vene polmonari", "Vena cava superiore", "Vena cava inferiore", "Vena carotidea"], correct: "Vene polmonari" },
+                { question: "Quale valvola regola l’apertura dell’aorta?", options: ["Aortica", "Mitrale", "Tricuspide", "Polmonare"], correct: "Aortica" },
+                { question: "Quale parte dell’aorta è curva?", options: ["Arco aortico", "Aorta ascendente", "Aorta toracica", "Aorta addominale"], correct: "Arco aortico" },
+                { question: "Quali vasi precedono i capillari?", options: ["Arteriole", "Venule", "Arterie", "Vene"], correct: "Arteriole" },
+                { question: "Quale sistema è ad alta pressione?", options: ["Sistema arterioso", "Sistema venoso", "Capillari", "Circolo polmonare"], correct: "Sistema arterioso" },
+                { question: "Dove si raccolgono i capillari polmonari?", options: ["Vene polmonari", "Arteria polmonare", "Aorta", "Vena cava"], correct: "Vene polmonari" },
+                { question: "Quale tunica delle vene è più muscolare?", options: ["Tunica media", "Tunica interna", "Tunica esterna", "Tunica elastica"], correct: "Tunica media" },
+                { question: "Quale direzione hanno le vene?", options: ["Centripeta", "Centrifuga", "Orizzontale", "Verticale"], correct: "Centripeta" }
+            ],
+            // Quiz 2
+            [
+                { question: "Cosa elimina l’apparato circolatorio?", options: ["Anidride carbonica", "Ossigeno", "Nutrienti", "Calcio"], correct: "Anidride carbonica" },
+                { question: "Quale organo pompa il sangue?", options: ["Cuore", "Polmoni", "Fegato", "Reni"], correct: "Cuore" },
+                { question: "Quale circolo collega cuore e polmoni?", options: ["Polmonare", "Sistemico", "Coronarico", "Epatico"], correct: "Polmonare" },
+                { question: "Quali vasi sono elastici e muscolari?", options: ["Arterie", "Vene", "Capillari", "Venule"], correct: "Arterie" },
+                { question: "Cosa convoglia il sangue nei capillari?", options: ["Arteriole", "Venule", "Vene", "Arterie"], correct: "Arteriole" },
+                { question: "Da dove parte il sangue ossigenato nella circolazione sistemica?", options: ["Ventricolo sinistro", "Atrio destro", "Ventricolo destro", "Atrio sinistro"], correct: "Ventricolo sinistro" },
+                { question: "Quale vena riceve sangue dalla circolazione sistemica?", options: ["Vena cava", "Vene polmonari", "Arteria polmonare", "Aorta"], correct: "Vena cava" },
+                { question: "Quale arteria porta sangue ai polmoni?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Dove si raccolgono le vene polmonari?", options: ["Atrio sinistro", "Ventricolo destro", "Atrio destro", "Ventricolo sinistro"], correct: "Atrio sinistro" },
+                { question: "Quale valvola separa atrio e ventricolo sinistro?", options: ["Mitrale", "Tricuspide", "Aortica", "Polmonare"], correct: "Mitrale" },
+                { question: "Quale tunica delle arterie è connettivale?", options: ["Tunica esterna", "Tunica media", "Tunica interna", "Tunica muscolare"], correct: "Tunica esterna" },
+                { question: "Quali vasi hanno diametro inferiore a 3 mm?", options: ["Arteriole", "Arterie", "Vene", "Capillari"], correct: "Arteriole" },
+                { question: "Dove termina l’aorta discendente?", options: ["Quarta vertebra lombare", "Arco aortico", "Aorta toracica", "Ventricolo sinistro"], correct: "Quarta vertebra lombare" },
+                { question: "Quale arteria sistemica vascolarizza le gambe?", options: ["Femorale", "Carotidea", "Omerale", "Polmonare"], correct: "Femorale" },
+                { question: "Quante arterie polmonari ci sono?", options: ["Due", "Una", "Tre", "Quattro"], correct: "Due" },
+                { question: "In che secolo furono scoperti i capillari?", options: ["XVII", "XVI", "XVIII", "XV"], correct: "XVII" },
+                { question: "Quali vasi confluiscono nelle vene?", options: ["Venule", "Arteriole", "Arterie", "Capillari"], correct: "Venule" },
+                { question: "Cosa permette la permeabilità dei capillari?", options: ["Cellule endoteliali", "Fibre muscolari", "Tessuto elastico", "Tunica media"], correct: "Cellule endoteliali" },
+                { question: "Quale è il diametro massimo dei capillari?", options: ["25-30 µm", "5-8 µm", "12-20 µm", "1-3 µm"], correct: "25-30 µm" },
+                { question: "Quali vasi riportano sangue al cuore?", options: ["Vene", "Arterie", "Capillari", "Arteriole"], correct: "Vene" },
+                { question: "Quale vena è lunga circa 7 cm?", options: ["Vena cava superiore", "Vena cava inferiore", "Vene polmonari", "Vena femorale"], correct: "Vena cava superiore" },
+                { question: "Quale vena trasporta sangue dagli arti inferiori?", options: ["Vena cava inferiore", "Vena cava superiore", "Vene polmonari", "Vena omerale"], correct: "Vena cava inferiore" },
+                { question: "Dove confluiscono le vene polmonari?", options: ["Atrio sinistro", "Ventricolo destro", "Atrio destro", "Ventricolo sinistro"], correct: "Atrio sinistro" },
+                { question: "Quale parte dell’aorta è ascendente?", options: ["Aorta ascendente", "Arco aortico", "Aorta toracica", "Aorta addominale"], correct: "Aorta ascendente" },
+                { question: "Quale arteria sistemica è nel braccio?", options: ["Omerale", "Carotidea", "Femorale", "Polmonare"], correct: "Omerale" },
+                { question: "Quali vasi sono tra due arterie?", options: ["Reti mirabili arteriose", "Reti mirabili venose", "Capillari polmonari", "Venule"], correct: "Reti mirabili arteriose" },
+                { question: "Quale sistema include l’aorta?", options: ["Sistema arterioso", "Sistema venoso", "Capillari", "Circolo polmonare"], correct: "Sistema arterioso" },
+                { question: "Dove si ramificano le arterie polmonari?", options: ["Polmoni", "Cuore", "Aorta", "Vena cava"], correct: "Polmoni" },
+                { question: "Quale tunica delle vene è più sottile rispetto alle arterie?", options: ["Tunica esterna", "Tunica media", "Tunica interna", "Tunica elastica"], correct: "Tunica esterna" },
+                { question: "Quale direzione hanno le arterie?", options: ["Centrifuga", "Centripeta", "Orizzontale", "Verticale"], correct: "Centrifuga" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale gas viene eliminato dal sangue?", options: ["Anidride carbonica", "Ossigeno", "Azoto", "Idrogeno"], correct: "Anidride carbonica" },
+                { question: "Quale sistema circolatorio è chiuso?", options: ["Vasi sanguigni", "Sistema linfatico", "Sistema nervoso", "Sistema digerente"], correct: "Vasi sanguigni" },
+                { question: "Quale circolo distribuisce sangue al corpo?", options: ["Sistemico", "Polmonare", "Coronarico", "Renale"], correct: "Sistemico" },
+                { question: "Quali vasi ricevono sangue dal cuore?", options: ["Arterie", "Vene", "Capillari", "Venule"], correct: "Arterie" },
+                { question: "Quali vasi sono più piccoli dopo le arteriole?", options: ["Capillari", "Venule", "Vene", "Arterie"], correct: "Capillari" },
+                { question: "Da dove esce il sangue nella circolazione sistemica?", options: ["Aorta", "Arteria polmonare", "Vena cava", "Vene polmonari"], correct: "Aorta" },
+                { question: "Quale cavità riceve sangue dalla vena cava?", options: ["Atrio destro", "Ventricolo sinistro", "Atrio sinistro", "Ventricolo destro"], correct: "Atrio destro" },
+                { question: "Quale arteria si divide in due rami?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Dove passa il sangue ossigenato dopo i polmoni?", options: ["Atrio sinistro", "Ventricolo destro", "Atrio destro", "Ventricolo sinistro"], correct: "Atrio sinistro" },
+                { question: "Quale valvola è tra ventricolo destro e arteria polmonare?", options: ["Polmonare", "Mitrale", "Tricuspide", "Aortica"], correct: "Polmonare" },
+                { question: "Quale tunica delle arterie ha fibre muscolari lisce?", options: ["Tunica media", "Tunica interna", "Tunica esterna", "Tunica connettivale"], correct: "Tunica media" },
+                { question: "Quale parte dell’aorta è toracica?", options: ["Aorta discendente", "Aorta ascendente", "Arco aortico", "Aorta addominale"], correct: "Aorta discendente" },
+                { question: "Quale arteria sistemica è nel collo?", options: ["Carotidea", "Omerale", "Femorale", "Polmonare"], correct: "Carotidea" },
+                { question: "Quale arteria collega cuore e polmoni?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Quale anatomista nominò i capillari?", options: ["Marcello Malpighi", "Andreas Vesalius", "William Harvey", "Galeno"], correct: "Marcello Malpighi" },
+                { question: "Quali vasi raccolgono sangue dai capillari?", options: ["Venule", "Arteriole", "Arterie", "Vene"], correct: "Venule" },
+                { question: "Dove si scambiano ossigeno e CO2?", options: ["Capillari", "Arterie", "Vene", "Arteriole"], correct: "Capillari" },
+                { question: "Quale è il diametro dei capillari nel midollo osseo?", options: ["12-30 µm", "5-8 µm", "1-3 µm", "25-50 µm"], correct: "12-30 µm" },
+                { question: "Quali vasi hanno direzione centripeta?", options: ["Vene", "Arterie", "Capillari", "Arteriole"], correct: "Vene" },
+                { question: "Quale vena ha diametro di 22 mm?", options: ["Vena cava superiore", "Vena cava inferiore", "Vene polmonari", "Vena femorale"], correct: "Vena cava superiore" },
+                { question: "Quale vena è lunga 22 cm?", options: ["Vena cava inferiore", "Vena cava superiore", "Vene polmonari", "Vena omerale"], correct: "Vena cava inferiore" },
+                { question: "Quale vena fa parte della piccola circolazione?", options: ["Vene polmonari", "Vena cava superiore", "Vena cava inferiore", "Vena carotidea"], correct: "Vene polmonari" },
+                { question: "Quale parte dell’aorta sale verso l’alto?", options: ["Aorta ascendente", "Arco aortico", "Aorta toracica", "Aorta addominale"], correct: "Aorta ascendente" },
+                { question: "Quali vasi sono tra due vene?", options: ["Reti mirabili venose", "Reti mirabili arteriose", "Capillari polmonari", "Arteriole"], correct: "Reti mirabili venose" },
+                { question: "Quale sistema trasporta sangue ossigenato al corpo?", options: ["Sistema arterioso", "Sistema venoso", "Capillari", "Circolo polmonare"], correct: "Sistema arterioso" },
+                { question: "Dove avviene lo scambio nei polmoni?", options: ["Capillari", "Arteria polmonare", "Vene polmonari", "Aorta"], correct: "Capillari" },
+                { question: "Quale tunica delle vene è connettivale?", options: ["Tunica esterna", "Tunica media", "Tunica interna", "Tunica elastica"], correct: "Tunica esterna" },
+                { question: "Quale arteria sistemica è nel torace?", options: ["Aorta toracica", "Carotidea", "Femorale", "Omerale"], correct: "Aorta toracica" },
+                { question: "Quale cavità pompa sangue nell’aorta?", options: ["Ventricolo sinistro", "Atrio destro", "Ventricolo destro", "Atrio sinistro"], correct: "Ventricolo sinistro" },
+                { question: "Quale direzione hanno i capillari?", options: ["Tra arterie e vene", "Centrifuga", "Centripeta", "Verticale"], correct: "Tra arterie e vene" }
+            ],
+            // Quiz 4
+            [
+                { question: "Cosa rifornisce le cellule di ossigeno?", options: ["Sangue", "Linfa", "Urina", "Bile"], correct: "Sangue" },
+                { question: "Quale sistema include arterie e vene?", options: ["Circolatorio", "Respiratorio", "Nervoso", "Muscolare"], correct: "Circolatorio" },
+                { question: "Quale circolo è detto piccola circolazione?", options: ["Polmonare", "Sistemico", "Coronarico", "Epatico"], correct: "Polmonare" },
+                { question: "Quali vasi hanno fibre elastiche?", options: ["Arterie", "Vene", "Capillari", "Venule"], correct: "Arterie" },
+                { question: "Quali vasi sono permeabili ai nutrienti?", options: ["Capillari", "Arterie", "Vene", "Arteriole"], correct: "Capillari" },
+                { question: "Quale cavità pompa sangue nell’aorta?", options: ["Ventricolo sinistro", "Atrio destro", "Ventricolo destro", "Atrio sinistro"], correct: "Ventricolo sinistro" },
+                { question: "Quale vena porta sangue all’atrio destro?", options: ["Vena cava", "Vene polmonari", "Arteria polmonare", "Aorta"], correct: "Vena cava" },
+                { question: "Quale arteria si ramifica nei polmoni?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Quale valvola è tra atrio e ventricolo sinistro?", options: ["Mitrale", "Tricuspide", "Aortica", "Polmonare"], correct: "Mitrale" },
+                { question: "Quale tunica delle arterie è muscolare?", options: ["Tunica media", "Tunica interna", "Tunica esterna", "Tunica connettivale"], correct: "Tunica media" },
+                { question: "Quale parte dell’aorta è addominale?", options: ["Aorta discendente", "Aorta ascendente", "Arco aortico", "Aorta toracica"], correct: "Aorta discendente" },
+                { question: "Quale arteria sistemica è negli arti superiori?", options: ["Omerale", "Carotidea", "Femorale", "Polmonare"], correct: "Omerale" },
+                { question: "Quale arteria trasporta sangue non ossigenato?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Chi individuò i capillari nel XVII secolo?", options: ["Marcello Malpighi", "William Harvey", "Galeno", "Andreas Vesalius"], correct: "Marcello Malpighi" },
+                { question: "Quali vasi confluiscono dai capillari?", options: ["Venule", "Arteriole", "Arterie", "Vene"], correct: "Venule" },
+                { question: "Quale struttura dei capillari è permeabile?", options: ["Cellule endoteliali", "Fibre elastiche", "Tunica media", "Muscoli lisci"], correct: "Cellule endoteliali" },
+                { question: "Quale è il diametro dei capillari nella retina?", options: ["5-8 µm", "12-20 µm", "25-30 µm", "1-3 µm"], correct: "5-8 µm" },
+                { question: "Quali vasi riportano sangue povero di ossigeno?", options: ["Vene", "Arterie", "Capillari", "Arteriole"], correct: "Vene" },
+                { question: "Quale vena trasporta sangue dalla testa?", options: ["Vena cava superiore", "Vena cava inferiore", "Vene polmonari", "Vena femorale"], correct: "Vena cava superiore" },
+                { question: "Quale vena è sotto il diaframma?", options: ["Vena cava inferiore", "Vena cava superiore", "Vene polmonari", "Vena omerale"], correct: "Vena cava inferiore" },
+                { question: "Quale vena porta sangue dai polmoni?", options: ["Vene polmonari", "Vena cava superiore", "Vena cava inferiore", "Vena carotidea"], correct: "Vene polmonari" },
+                { question: "Quale parte dell’aorta forma un arco?", options: ["Arco aortico", "Aorta ascendente", "Aorta toracica", "Aorta addominale"], correct: "Arco aortico" },
+                { question: "Quale arteria sistemica è nella gamba?", options: ["Femorale", "Carotidea", "Omerale", "Polmonare"], correct: "Femorale" },
+                { question: "Quali vasi sono tra arterie e vene?", options: ["Capillari", "Reti mirabili arteriose", "Reti mirabili venose", "Arteriole"], correct: "Capillari" },
+                { question: "Quale sistema include le arterie polmonari?", options: ["Circolo polmonare", "Sistema arterioso", "Sistema venoso", "Capillari"], correct: "Circolo polmonare" },
+                { question: "Dove si trova la valvola tricuspide?", options: ["Tra atrio e ventricolo destro", "Tra atrio e ventricolo sinistro", "Nell’aorta", "Nell’arteria polmonare"], correct: "Tra atrio e ventricolo destro" },
+                { question: "Quale tunica delle vene ha fibre muscolari?", options: ["Tunica media", "Tunica interna", "Tunica esterna", "Tunica elastica"], correct: "Tunica media" },
+                { question: "Quale cavità riceve sangue ossigenato?", options: ["Atrio sinistro", "Ventricolo destro", "Atrio destro", "Ventricolo sinistro"], correct: "Atrio sinistro" },
+                { question: "Quale direzione hanno le arterie polmonari?", options: ["Centrifuga", "Centripeta", "Orizzontale", "Verticale"], correct: "Centrifuga" },
+                { question: "Quale parte dell’aorta è sopra il cuore?", options: ["Aorta ascendente", "Arco aortico", "Aorta toracica", "Aorta addominale"], correct: "Aorta ascendente" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale nutriente trasporta il sangue?", options: ["Ossigeno", "Anidride carbonica", "Calcio", "Sodio"], correct: "Ossigeno" },
+                { question: "Quale organo è centrale nell’apparato circolatorio?", options: ["Cuore", "Polmoni", "Fegato", "Cervello"], correct: "Cuore" },
+                { question: "Quale circolo ossigena il sangue?", options: ["Polmonare", "Sistemico", "Coronarico", "Renale"], correct: "Polmonare" },
+                { question: "Quali vasi trasportano sangue ossigenato (eccetto polmonari)?", options: ["Arterie", "Vene", "Capillari", "Venule"], correct: "Arterie" },
+                { question: "Quali vasi permettono lo scambio di gas?", options: ["Capillari", "Arterie", "Vene", "Arteriole"], correct: "Capillari" },
+                { question: "Da dove parte l’aorta?", options: ["Ventricolo sinistro", "Atrio destro", "Ventricolo destro", "Atrio sinistro"], correct: "Ventricolo sinistro" },
+                { question: "Quale vena confluisce nell’atrio destro?", options: ["Vena cava", "Vene polmonari", "Arteria polmonare", "Aorta"], correct: "Vena cava" },
+                { question: "Quale arteria porta sangue ai polmoni?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Quale valvola è tra ventricolo sinistro e aorta?", options: ["Aortica", "Mitrale", "Tricuspide", "Polmonare"], correct: "Aortica" },
+                { question: "Quale tunica delle arterie è elastica?", options: ["Tunica esterna", "Tunica media", "Tunica interna", "Tunica muscolare"], correct: "Tunica esterna" },
+                { question: "Quale parte dell’aorta si biforca?", options: ["Aorta discendente", "Aorta ascendente", "Arco aortico", "Aorta toracica"], correct: "Aorta discendente" },
+                { question: "Quale arteria sistemica è nella testa?", options: ["Carotidea", "Omerale", "Femorale", "Polmonare"], correct: "Carotidea" },
+                { question: "Quale arteria fa parte della piccola circolazione?", options: ["Polmonare", "Aorta", "Carotidea", "Femorale"], correct: "Polmonare" },
+                { question: "Quale scienziato scoprì i capillari?", options: ["Marcello Malpighi", "William Harvey", "Galeno", "Hippocrates"], correct: "Marcello Malpighi" },
+                { question: "Quali vasi seguono le arteriole?", options: ["Capillari", "Venule", "Arterie", "Vene"], correct: "Capillari" },
+                { question: "Quale caratteristica rende i capillari permeabili?", options: ["Strato endoteliale", "Fibre muscolari", "Tunica elastica", "Tessuto connettivo"], correct: "Strato endoteliale" },
+                { question: "Quale è il diametro dei capillari nei muscoli?", options: ["5-8 µm", "12-20 µm", "25-30 µm", "1-3 µm"], correct: "5-8 µm" },
+                { question: "Quali vasi trasportano sangue al cuore?", options: ["Vene", "Arterie", "Capillari", "Arteriole"], correct: "Vene" },
+                { question: "Quale vena ha diametro di 30 mm?", options: ["Vena cava inferiore", "Vena cava superiore", "Vene polmonari", "Vena femorale"], correct: "Vena cava inferiore" },
+                { question: "Quale vena trasporta sangue dal torace?", options: ["Vena cava superiore", "Vena cava inferiore", "Vene polmonari", "Vena omerale"], correct: "Vena cava superiore" },
+                { question: "Quale vena è nella circolazione polmonare?", options: ["Vene polmonari", "Vena cava superiore", "Vena cava inferiore", "Vena carotidea"], correct: "Vene polmonari" },
+                { question: "Quale parte dell’aorta è toracica?", options: ["Aorta discendente", "Aorta ascendente", "Arco aortico", "Aorta addominale"], correct: "Aorta discendente" },
+                { question: "Quale arteria sistemica è nel bacino?", options: ["Femorale", "Carotidea", "Omerale", "Polmonare"], correct: "Femorale" },
+                { question: "Quali vasi formano reti mirabili venose?", options: ["Capillari", "Reti mirabili arteriose", "Venule", "Arteriole"], correct: "Capillari" },
+                { question: "Quale sistema pompa sangue al corpo?", options: ["Sistema arterioso", "Sistema venoso", "Capillari", "Circolo polmonare"], correct: "Sistema arterioso" },
+                { question: "Dove si ossigena il sangue?", options: ["Polmoni", "Cuore", "Fegato", "Reni"], correct: "Polmoni" },
+                { question: "Quale tunica delle vene è meno elastica?", options: ["Tunica esterna", "Tunica media", "Tunica interna", "Tunica muscolare"], correct: "Tunica esterna" },
+                { question: "Quale cavità pompa sangue ai polmoni?", options: ["Ventricolo destro", "Atrio sinistro", "Ventricolo sinistro", "Atrio destro"], correct: "Ventricolo destro" },
+                { question: "Quale direzione hanno le vene polmonari?", options: ["Centripeta", "Centrifuga", "Orizzontale", "Verticale"], correct: "Centripeta" },
+                { question: "Quale parte dell’aorta è sopra il diaframma?", options: ["Aorta toracica", "Aorta ascendente", "Arco aortico", "Aorta addominale"], correct: "Aorta toracica" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>

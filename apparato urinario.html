@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sul sistema urinario per l'Operatore Socio-Sanitario (OSS): scopri reni, ureteri, vescica, uretra e quiz interattivi.">
+    <meta name="keywords" content="sistema urinario, OSS, reni, ureteri, vescica, uretra, quiz sistema urinario">
+    <title>Il Sistema Urinario</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Il Sistema Urinario</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#sistema-urinario">Sistema Urinario</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione al Sistema Urinario</h2>
+            <p>Il sistema urinario, mediante la funzione dei diversi organi che lo compongono, si occupa della produzione e dell’eliminazione dell’urina. È formato dai reni, dagli ureteri, dalla vescica e dall’uretra.</p>
+        </section>
+
+        <section id="sistema-urinario">
+            <h2>Struttura e Funzioni del Sistema Urinario</h2>
+
+            <h3>I Reni</h3>
+            <p>I reni sono due piccoli organi deputati a produrre urina. Ogni rene è avvolto da una capsula resistente e anelastica formata da tessuto fibroso che contiene il parenchima renale (ovvero il tessuto funzionale renale), i rami dei vasi ematici renali e le vie escretrici intrarenali (calici e una parte della pelvi renale) che sboccano nelle vie escretrici extrarenali (la rimanente parte della pelvi renale, l’uretere, la vescica e l’uretra). Il parenchima renale, la cui principale funzione è quella di produrre l’urina, è formato da una porzione midollare, più centrale, e una corticale, periferica. La porzione midollare è formata da 10-12 piramidi renali che sboccano nel seno renale e che, attraverso i calici renali, convogliano il loro prodotto nell’uretere. La seconda è formata prevalentemente dai corpuscoli di Malpighi e dai tubuli contorti.</p>
+            <p><strong>Qual è la funzione dei reni?</strong> Sebbene la funzione principale dei reni sia quella di produrre l’urina a partire dal sangue, permettendo di eliminare le scorie presenti nell’organismo, questi due organi risultano molto importanti anche per altre funzioni. Sono i reni, ad esempio, a secernere l’eritropoietina, l’ormone che promuove la maturazione dei globuli rossi o a secernere la renina, un enzima che gioca un ruolo importante nella regolazione della pressione sanguigna. Sono infine i reni a elaborare la vitamina D nella sua forma attiva affinché possa essere utilizzata dall’organismo in modo efficiente. La presenza di un solo rene sano è sufficiente a garantire lo svolgimento di tutte queste funzioni.</p>
+
+            <h3>Gli Ureteri</h3>
+            <p>Gli ureteri sono i condotti che permettono il passaggio dell’urina dai reni alla vescica urinaria. I due ureteri sono disposti ai lati della colonna vertebrale, verticalmente. Il loro diametro misura circa un centimetro, mentre la lunghezza è di circa 25-30 centimetri. Internamente sono rivestiti da una parete mucosa che entra in contatto con l’urina, a sua volta ricoperta da una tonaca muscolare che, contraendosi, provoca l’espulsione dell’urina nella vescica. Ogni uretere presenta nella sua estremità inferiore, nell’area di sbocco nella parete posteriore della vescica, una valvola che permette all’urina di riversarsi nella vescica ma che le impedisce il percorso inverso, evitando che rifluisca verso i reni.</p>
+            <p>Nonostante l’organismo umano sia progettato per avere un solo uretere per ciascun rene, la duplicità ureterale – ovvero la presenza di due ureteri per un solo rene – è una malformazione congenita che riguarda fino allo 0,8% della popolazione, e che il più delle volte non genera alcun problema di salute e non dà alcuna conseguenza a livello funzionale. Tra le patologie che riguardano l’uretere ci sono quelle che interessano la parete ureterale (tra cui infiammazioni e malformazioni), oltre a calcolosi e neoplasie. Anche le patologie di organi vicini, come tumori o sclerosi, possono interessare l’uretere e provocare delle conseguenze sul suo stato di salute (ad esempio comprimendolo).</p>
+            <p><strong>A cosa servono gli ureteri?</strong> La funzione degli ureteri è quella di trasportare l’urina prodotta dai reni dalla pelvi renale alla vescica urinaria.</p>
+
+            <h3>La Vescica Urinaria</h3>
+            <p>La vescica urinaria è l’organo responsabile della raccolta dell’urina prodotta dai reni ed è collocata diversamente nella donna e nell’uomo. Nel sesso femminile si trova sotto il peritoneo, davanti all’utero, mentre nel sesso maschile è collocata al di sopra della prostata e anteriormente al retto. La parete che struttura la vescica è spessa circa 0,5 centimetri ed è costituita da due strati, uno interno e mucoso e dotato di creste, a diretto contatto con l’urina, l’altra esterna e formata da tessuto muscolare liscio disposto in tre strati (muscolo vescicale o estrusore, ovvero il muscolo in grado di produrre la contrazione della vescica che provoca la fuoriuscita dell’urina). La parete della vescica in cui confluiscono gli ureteri è dotata di due specifici dispositivi antireflusso (uno per ciascun uretere) che fanno sì che l’urina accumulata nella vescica non refluisca negli ureteri stessi. La parte più bassa della vescica, il collo vescicale, continua nell’uretra ed è dotato di uno sfintere (sfintere uretrale) che ne regola l’apertura (in caso di necessità di minzione) e la chiusura (quando, cioè, non è necessario urinare).</p>
+            <p>Serbatoio naturale perlopiù a forma di sfera, la forma e la grandezza della vescica possono variare in base alla quantità di urina contenuta: mediamente la vescica di un adulto può contenerne 300-400 millilitri.</p>
+            <p><strong>A cosa serve la vescica urinaria?</strong> La vescica appartiene all’apparato urinario e il suo scopo è quello di raccogliere l’urina e di consentirne l’espulsione da parte dell’organismo verso l’esterno. Diverse sono le fasi che caratterizzano la minzione: la fase di riempimento della vescica, durante la quale l’urina prodotta dai reni viene portata nella vescica attraverso gli ureteri (in questa fase il collo vescicale e lo sfintere uretrale sono chiusi). A riempimento vescicale completo, ovvero intorno ai 300-400 ml di urina nei soggetti adulti, il collo vescicale e lo sfintere uretrale si rilassano per permettere il passaggio dell’urina e il muscolo vescicale si contrae, permettendo lo svuotamento della vescica e il passaggio dell’urina nell’uretra.</p>
+
+            <h3>L’Uretra</h3>
+            <p>L’uretra è il canale dell’apparato uro-genitale che mette in comunicazione la vescica con l’orifizio (meato) uretrale.</p>
+            <ul>
+                <li>Nella donna l’uretra, lunga tra i 3 e i 4 centimetri, è pressoché rettilinea e mette in comunicazione la vescica con il meato uretrale. La sua apertura verso l’esterno del corpo è collocata tra il clitoride e l’orifizio vaginale.</li>
+                <li>L’uretra maschile è lunga circa il triplo di quella femminile e viene divisa in uretra anteriore e uretra posteriore. La porzione anteriore dell’uretra, lunga circa 8 centimetri, attraversa lo scroto e il pene e si apre nel meato urinario esterno presente sull’estremità del glande. L’uretra anteriore risulta circondata, per tutta la sua lunghezza, dal corpo spugnoso, un tessuto molto vascolarizzato che svolge un ruolo di primaria importanza nell’erezione dell’organo sessuale maschile. La porzione posteriore, nota anche come “uretra prostatica”, è lunga circa 4 centimetri ed è circondata dalla prostata. In questa porzione dell’uretra si innestano i dotti eiaculatori e i dotti prostatici, riversando al suo interno lo sperma.</li>
+            </ul>
+            <p><strong>A cosa serve l’uretra?</strong> L’uretra nella donna rappresenta l’ultimo tratto delle vie urinarie e la sua funzione principale è quella di permettere l’eliminazione dell’urina prodotta dai reni. Nell’uomo, oltre a consentire l’eliminazione dell’urina, l’uretra provvede anche al trasporto dello sperma, che viene in essa depositato dai dotti eiaculatori e prostatici che vi si innestano. Nell’uomo l’uretra rappresenta dunque, oltre all’ultimo tratto delle vie urinarie, anche l’ultima porzione delle vie spermatiche.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sul Sistema Urinario</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Il Sistema Urinario - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Quali organi compongono il sistema urinario?", options: ["Reni, ureteri, vescica, uretra", "Fegato, reni, vescica", "Reni, stomaco, uretra", "Vescica, polmoni, ureteri"], correct: "Reni, ureteri, vescica, uretra" },
+                { question: "Qual è la funzione principale dei reni?", options: ["Produrre urina", "Digerire cibo", "Pompare sangue", "Trasportare ossigeno"], correct: "Produrre urina" },
+                { question: "Cosa avvolge ogni rene?", options: ["Capsula fibrosa", "Membrana mucosa", "Tonaca muscolare", "Pelle"], correct: "Capsula fibrosa" },
+                { question: "Quale parte del rene è più centrale?", options: ["Midollare", "Corticale", "Pelvi renale", "Calici"], correct: "Midollare" },
+                { question: "Quante piramidi renali ha un rene?", options: ["10-12", "5-7", "15-20", "2-3"], correct: "10-12" },
+                { question: "Dove sboccano le piramidi renali?", options: ["Seno renale", "Uretere", "Vescica", "Uretra"], correct: "Seno renale" },
+                { question: "Quale ormone secernono i reni per i globuli rossi?", options: ["Eritropoietina", "Renina", "Insulina", "Adrenalina"], correct: "Eritropoietina" },
+                { question: "Cosa regola la pressione sanguigna nei reni?", options: ["Renina", "Eritropoietina", "Vitamina D", "Calcio"], correct: "Renina" },
+                { question: "Quale vitamina elaborano i reni?", options: ["Vitamina D", "Vitamina C", "Vitamina A", "Vitamina B"], correct: "Vitamina D" },
+                { question: "Quanti reni sono sufficienti per le funzioni vitali?", options: ["Uno", "Due", "Tre", "Nessuno"], correct: "Uno" },
+                { question: "Qual è la funzione degli ureteri?", options: ["Trasportare urina", "Produrre urina", "Filtrare sangue", "Espellere sperma"], correct: "Trasportare urina" },
+                { question: "Qual è la lunghezza media degli ureteri?", options: ["25-30 cm", "10-15 cm", "3-4 cm", "50 cm"], correct: "25-30 cm" },
+                { question: "Cosa impedisce il reflusso dell’urina negli ureteri?", options: ["Valvola", "Sfintere", "Capsula", "Muscolo"], correct: "Valvola" },
+                { question: "Quale malformazione riguarda gli ureteri?", options: ["Duplicità ureterale", "Calcolosi", "Neoplasia", "Infiammazione"], correct: "Duplicità ureterale" },
+                { question: "Quale percentuale della popolazione ha la duplicità ureterale?", options: ["0,8%", "5%", "10%", "2%"], correct: "0,8%" },
+                { question: "Dove si trova la vescica nella donna?", options: ["Davanti all’utero", "Sopra la prostata", "Dietro il retto", "Sotto i reni"], correct: "Davanti all’utero" },
+                { question: "Qual è lo spessore della parete della vescica?", options: ["0,5 cm", "1 cm", "2 cm", "0,1 cm"], correct: "0,5 cm" },
+                { question: "Quale muscolo provoca la contrazione della vescica?", options: ["Muscolo estrusore", "Muscolo liscio", "Sfintere", "Muscolo striato"], correct: "Muscolo estrusore" },
+                { question: "Quanta urina può contenere la vescica adulta?", options: ["300-400 ml", "100-200 ml", "500-600 ml", "50-100 ml"], correct: "300-400 ml" },
+                { question: "Cosa regola l’apertura della vescica?", options: ["Sfintere uretrale", "Valvola", "Muscolo estrusore", "Capsula"], correct: "Sfintere uretrale" },
+                { question: "Qual è la funzione della vescica?", options: ["Raccogliere ed espellere urina", "Produrre urina", "Trasportare sperma", "Filtrare sangue"], correct: "Raccogliere ed espellere urina" },
+                { question: "Qual è la lunghezza dell’uretra femminile?", options: ["3-4 cm", "8 cm", "12 cm", "25 cm"], correct: "3-4 cm" },
+                { question: "Dove si apre l’uretra femminile?", options: ["Tra clitoride e vagina", "Nel pene", "Nel retto", "Sotto la prostata"], correct: "Tra clitoride e vagina" },
+                { question: "Qual è la lunghezza totale dell’uretra maschile?", options: ["12 cm", "3-4 cm", "25 cm", "8 cm"], correct: "12 cm" },
+                { question: "Quale parte dell’uretra maschile è prostatica?", options: ["Posteriore", "Anteriore", "Centrale", "Esterna"], correct: "Posteriore" },
+                { question: "Cosa circonda l’uretra anteriore maschile?", options: ["Corpo spugnoso", "Prostata", "Muscolo liscio", "Sfintere"], correct: "Corpo spugnoso" },
+                { question: "Quale funzione ha l’uretra nella donna?", options: ["Eliminare urina", "Trasportare sperma", "Produrre urina", "Filtrare sangue"], correct: "Eliminare urina" },
+                { question: "Cosa trasporta l’uretra maschile oltre all’urina?", options: ["Sperma", "Sangue", "Bile", "Saliva"], correct: "Sperma" },
+                { question: "Dove si innestano i dotti eiaculatori?", options: ["Uretra prostatica", "Uretra anteriore", "Vescica", "Ureteri"], correct: "Uretra prostatica" },
+                { question: "Quale tessuto forma la porzione corticale del rene?", options: ["Corpuscoli di Malpighi", "Piramidi renali", "Calici", "Pelvi"], correct: "Corpuscoli di Malpighi" }
+            ],
+            // Quiz 2
+            [
+                { question: "Quali sono i condotti che trasportano l’urina alla vescica?", options: ["Ureteri", "Reni", "Uretra", "Vescica"], correct: "Ureteri" },
+                { question: "Quale parte del rene contiene i calici renali?", options: ["Midollare", "Corticale", "Pelvi renale", "Capsula"], correct: "Midollare" },
+                { question: "Cosa contiene il parenchima renale?", options: ["Vasi ematici e calici", "Solo urina", "Muscoli", "Pelle"], correct: "Vasi ematici e calici" },
+                { question: "Quale enzima regola la pressione sanguigna?", options: ["Renina", "Eritropoietina", "Vitamina D", "Insulina"], correct: "Renina" },
+                { question: "Quale ormone promuove la maturazione dei globuli rossi?", options: ["Eritropoietina", "Renina", "Adrenalina", "Calcitonina"], correct: "Eritropoietina" },
+                { question: "Dove convogliano le piramidi renali l’urina?", options: ["Uretere", "Vescica", "Uretra", "Seno renale"], correct: "Uretere" },
+                { question: "Quale parte del rene è periferica?", options: ["Corticale", "Midollare", "Pelvi", "Calici"], correct: "Corticale" },
+                { question: "Cosa attiva la vitamina D nei reni?", options: ["Elaborazione", "Secrezione", "Filtrazione", "Espulsione"], correct: "Elaborazione" },
+                { question: "Quale struttura impedisce il reflusso nella vescica?", options: ["Dispositivo antireflusso", "Sfintere", "Capsula", "Muscolo"], correct: "Dispositivo antireflusso" },
+                { question: "Qual è il diametro medio degli ureteri?", options: ["1 cm", "0,5 cm", "2 cm", "3 cm"], correct: "1 cm" },
+                { question: "Quale tonaca degli ureteri espelle l’urina?", options: ["Muscolare", "Mucosa", "Fibrosa", "Liscia"], correct: "Muscolare" },
+                { question: "Quale patologia può comprimere l’uretere?", options: ["Tumori vicini", "Calcolosi", "Duplicità", "Infiammazione"], correct: "Tumori vicini" },
+                { question: "Dove si trova la vescica nell’uomo?", options: ["Sopra la prostata", "Davanti all’utero", "Sotto i reni", "Dietro il fegato"], correct: "Sopra la prostata" },
+                { question: "Quale strato della vescica è a contatto con l’urina?", options: ["Mucoso", "Muscolare", "Fibroso", "Esterno"], correct: "Mucoso" },
+                { question: "Quale fase della minzione riempie la vescica?", options: ["Riempimento", "Svuotamento", "Contrazione", "Rilassamento"], correct: "Riempimento" },
+                { question: "Cosa si contrae per svuotare la vescica?", options: ["Muscolo estrusore", "Sfintere", "Valvola", "Mucosa"], correct: "Muscolo estrusore" },
+                { question: "Quale parte della vescica è dotata di uno sfintere?", options: ["Collo vescicale", "Parete", "Ureteri", "Base"], correct: "Collo vescicale" },
+                { question: "Quanto urina contiene la vescica al massimo?", options: ["300-400 ml", "100-200 ml", "500-600 ml", "50-100 ml"], correct: "300-400 ml" },
+                { question: "Quale parte dell’uretra maschile è anteriore?", options: ["8 cm", "4 cm", "3 cm", "12 cm"], correct: "8 cm" },
+                { question: "Cosa circonda l’uretra prostatica?", options: ["Prostata", "Corpo spugnoso", "Muscolo liscio", "Sfintere"], correct: "Prostata" },
+                { question: "Quale funzione ha l’uretra nell’uomo?", options: ["Eliminare urina e trasportare sperma", "Solo urina", "Solo sperma", "Filtrare sangue"], correct: "Eliminare urina e trasportare sperma" },
+                { question: "Dove si trova il meato uretrale femminile?", options: ["Tra clitoride e vagina", "Nel pene", "Sotto la prostata", "Nel retto"], correct: "Tra clitoride e vagina" },
+                { question: "Quale tessuto aiuta l’erezione nell’uretra maschile?", options: ["Corpo spugnoso", "Prostata", "Muscolo liscio", "Mucosa"], correct: "Corpo spugnoso" },
+                { question: "Quale parte del rene filtra il sangue?", options: ["Corpuscoli di Malpighi", "Piramidi renali", "Calici", "Pelvi"], correct: "Corpuscoli di Malpighi" },
+                { question: "Cosa produce i calici renali?", options: ["Urina", "Sangue", "Sperma", "Bile"], correct: "Urina" },
+                { question: "Quale malformazione è congenita negli ureteri?", options: ["Duplicità ureterale", "Calcolosi", "Neoplasia", "Infiammazione"], correct: "Duplicità ureterale" },
+                { question: "Quale organo raccoglie l’urina?", options: ["Vescica", "Reni", "Ureteri", "Uretra"], correct: "Vescica" },
+                { question: "Quale parte dell’uretra è lunga 4 cm nell’uomo?", options: ["Posteriore", "Anteriore", "Centrale", "Esterna"], correct: "Posteriore" },
+                { question: "Cosa si rilassa durante la minzione?", options: ["Sfintere uretrale", "Muscolo estrusore", "Valvola", "Mucosa"], correct: "Sfintere uretrale" },
+                { question: "Quale organo produce urina?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale organo produce l’eritropoietina?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" },
+                { question: "Quale parte del rene è formata da piramidi?", options: ["Midollare", "Corticale", "Pelvi", "Capsula"], correct: "Midollare" },
+                { question: "Cosa contiene la capsula renale?", options: ["Parenchima renale", "Muscolo liscio", "Pelle", "Grasso"], correct: "Parenchima renale" },
+                { question: "Dove si trovano i corpuscoli di Malpighi?", options: ["Corticale", "Midollare", "Calici", "Pelvi"], correct: "Corticale" },
+                { question: "Quale enzima secernono i reni?", options: ["Renina", "Eritropoietina", "Adrenalina", "Insulina"], correct: "Renina" },
+                { question: "Quale funzione dei reni elimina le scorie?", options: ["Produzione urina", "Regolazione pressione", "Secrezione ormone", "Attivazione vitamina"], correct: "Produzione urina" },
+                { question: "Quale struttura trasporta l’urina dai reni?", options: ["Ureteri", "Uretra", "Vescica", "Calici"], correct: "Ureteri" },
+                { question: "Quale parte degli ureteri è mucosa?", options: ["Interna", "Esterna", "Muscolare", "Fibrosa"], correct: "Interna" },
+                { question: "Cosa provoca l’espulsione dell’urina negli ureteri?", options: ["Tonaca muscolare", "Valvola", "Mucosa", "Capsula"], correct: "Tonaca muscolare" },
+                { question: "Quale percentuale ha la duplicità ureterale?", options: ["0,8%", "5%", "10%", "2%"], correct: "0,8%" },
+                { question: "Quale patologia riguarda la parete ureterale?", options: ["Infiammazione", "Duplicità", "Calcolosi", "Tumori vicini"], correct: "Infiammazione" },
+                { question: "Dove si trova la vescica nell’uomo?", options: ["Sopra la prostata", "Davanti all’utero", "Sotto i reni", "Dietro il fegato"], correct: "Sopra la prostata" },
+                { question: "Quale strato della vescica ha tre strati muscolari?", options: ["Esterno", "Mucoso", "Fibroso", "Interno"], correct: "Esterno" },
+                { question: "Quale dispositivo evita il reflusso nella vescica?", options: ["Antireflusso", "Sfintere", "Valvola", "Muscolo"], correct: "Antireflusso" },
+                { question: "Quale capacità ha la vescica adulta?", options: ["300-400 ml", "100-200 ml", "500-600 ml", "50-100 ml"], correct: "300-400 ml" },
+                { question: "Cosa regola la chiusura della vescica?", options: ["Sfintere uretrale", "Muscolo estrusore", "Valvola", "Mucosa"], correct: "Sfintere uretrale" },
+                { question: "Quale fase svuota la vescica?", options: ["Contrazione", "Riempimento", "Rilassamento", "Trasporto"], correct: "Contrazione" },
+                { question: "Quale organo espelle l’urina verso l’esterno?", options: ["Uretra", "Vescica", "Ureteri", "Reni"], correct: "Uretra" },
+                { question: "Qual è la lunghezza dell’uretra femminile?", options: ["3-4 cm", "8 cm", "12 cm", "25 cm"], correct: "3-4 cm" },
+                { question: "Dove si apre l’uretra maschile anteriore?", options: ["Glande", "Prostata", "Scroto", "Rene"], correct: "Glande" },
+                { question: "Quale parte dell’uretra maschile è lunga 4 cm?", options: ["Posteriore", "Anteriore", "Centrale", "Esterna"], correct: "Posteriore" },
+                { question: "Cosa trasporta l’uretra maschile oltre all’urina?", options: ["Sperma", "Sangue", "Bile", "Saliva"], correct: "Sperma" },
+                { question: "Quale tessuto circonda l’uretra anteriore?", options: ["Corpo spugnoso", "Prostata", "Muscolo liscio", "Mucosa"], correct: "Corpo spugnoso" },
+                { question: "Dove si innestano i dotti prostatici?", options: ["Uretra prostatica", "Uretra anteriore", "Vescica", "Ureteri"], correct: "Uretra prostatica" },
+                { question: "Quale funzione ha la vescica?", options: ["Raccogliere urina", "Produrre urina", "Filtrare sangue", "Trasportare sperma"], correct: "Raccogliere urina" },
+                { question: "Quale parte del rene contiene i tubuli contorti?", options: ["Corticale", "Midollare", "Pelvi", "Calici"], correct: "Corticale" },
+                { question: "Quale organo produce l’urina?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" },
+                { question: "Quale struttura impedisce il reflusso negli ureteri?", options: ["Valvola", "Sfintere", "Muscolo", "Capsula"], correct: "Valvola" },
+                { question: "Quale fase riempie la vescica?", options: ["Riempimento", "Svuotamento", "Contrazione", "Rilassamento"], correct: "Riempimento" },
+                { question: "Quale parte dell’uretra è rettilinea nella donna?", options: ["Tutta", "Anteriore", "Posteriore", "Centrale"], correct: "Tutta" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale organo regola la vitamina D?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" },
+                { question: "Quale parte del rene è più esterna?", options: ["Corticale", "Midollare", "Pelvi", "Calici"], correct: "Corticale" },
+                { question: "Cosa avvolge il parenchima renale?", options: ["Capsula fibrosa", "Mucosa", "Muscolo", "Pelle"], correct: "Capsula fibrosa" },
+                { question: "Dove sboccano i calici renali?", options: ["Uretere", "Vescica", "Uretra", "Seno renale"], correct: "Uretere" },
+                { question: "Quale ormone secernono i reni per la pressione?", options: ["Renina", "Eritropoietina", "Adrenalina", "Insulina"], correct: "Renina" },
+                { question: "Quale funzione dei reni produce globuli rossi?", options: ["Eritropoietina", "Produzione urina", "Regolazione pressione", "Attivazione vitamina"], correct: "Eritropoietina" },
+                { question: "Quale struttura collega i reni alla vescica?", options: ["Ureteri", "Uretra", "Calici", "Pelvi"], correct: "Ureteri" },
+                { question: "Quale parte degli ureteri è muscolare?", options: ["Tonaca muscolare", "Mucosa", "Fibrosa", "Interna"], correct: "Tonaca muscolare" },
+                { question: "Cosa impedisce il reflusso dell’urina nella vescica?", options: ["Dispositivo antireflusso", "Valvola", "Sfintere", "Muscolo"], correct: "Dispositivo antireflusso" },
+                { question: "Quale malformazione è congenita negli ureteri?", options: ["Duplicità ureterale", "Calcolosi", "Neoplasia", "Infiammazione"], correct: "Duplicità ureterale" },
+                { question: "Quale patologia può interessare l’uretere?", options: ["Calcolosi", "Duplicità", "Eritropoietina", "Pressione"], correct: "Calcolosi" },
+                { question: "Dove si trova la vescica nella donna?", options: ["Davanti all’utero", "Sopra la prostata", "Sotto i reni", "Dietro il retto"], correct: "Davanti all’utero" },
+                { question: "Quale strato della vescica è mucoso?", options: ["Interno", "Esterno", "Fibroso", "Muscolare"], correct: "Interno" },
+                { question: "Quale muscolo svuota la vescica?", options: ["Muscolo estrusore", "Sfintere", "Valvola", "Mucosa"], correct: "Muscolo estrusore" },
+                { question: "Quale capacità ha la vescica adulta?", options: ["300-400 ml", "100-200 ml", "500-600 ml", "50-100 ml"], correct: "300-400 ml" },
+                { question: "Cosa regola l’apertura della vescica?", options: ["Sfintere uretrale", "Muscolo estrusore", "Valvola", "Mucosa"], correct: "Sfintere uretrale" },
+                { question: "Quale fase rilassa lo sfintere uretrale?", options: ["Svuotamento", "Riempimento", "Contrazione", "Trasporto"], correct: "Svuotamento" },
+                { question: "Quale organo è l’ultimo tratto urinario nella donna?", options: ["Uretra", "Vescica", "Ureteri", "Reni"], correct: "Uretra" },
+                { question: "Qual è la lunghezza dell’uretra maschile anteriore?", options: ["8 cm", "4 cm", "3 cm", "12 cm"], correct: "8 cm" },
+                { question: "Dove si trova la prostata nell’uretra maschile?", options: ["Posteriore", "Anteriore", "Centrale", "Esterna"], correct: "Posteriore" },
+                { question: "Quale funzione ha l’uretra nella donna?", options: ["Eliminare urina", "Trasportare sperma", "Produrre urina", "Filtrare sangue"], correct: "Eliminare urina" },
+                { question: "Cosa trasporta l’uretra maschile oltre all’urina?", options: ["Sperma", "Sangue", "Bile", "Saliva"], correct: "Sperma" },
+                { question: "Quale tessuto circonda l’uretra anteriore maschile?", options: ["Corpo spugnoso", "Prostata", "Muscolo liscio", "Mucosa"], correct: "Corpo spugnoso" },
+                { question: "Dove si innestano i dotti eiaculatori nell’uomo?", options: ["Uretra prostatica", "Uretra anteriore", "Vescica", "Ureteri"], correct: "Uretra prostatica" },
+                { question: "Quale organo raccoglie l’urina dai reni?", options: ["Vescica", "Ureteri", "Uretra", "Pelvi"], correct: "Vescica" },
+                { question: "Quale parte del rene contiene le piramidi?", options: ["Midollare", "Corticale", "Pelvi", "Calici"], correct: "Midollare" },
+                { question: "Quale organo filtra il sangue?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" },
+                { question: "Quale struttura impedisce il reflusso negli ureteri?", options: ["Valvola", "Sfintere", "Muscolo", "Capsula"], correct: "Valvola" },
+                { question: "Quale fase riempie la vescica?", options: ["Riempimento", "Svuotamento", "Contrazione", "Rilassamento"], correct: "Riempimento" },
+                { question: "Quale parte dell’uretra femminile è lunga 3-4 cm?", options: ["Tutta", "Anteriore", "Posteriore", "Centrale"], correct: "Tutta" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale organo produce la renina?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" },
+                { question: "Quale parte del rene contiene i tubuli contorti?", options: ["Corticale", "Midollare", "Pelvi", "Calici"], correct: "Corticale" },
+                { question: "Cosa contiene il seno renale?", options: ["Calici", "Muscolo", "Pelle", "Grasso"], correct: "Calici" },
+                { question: "Dove sboccano le piramidi renali?", options: ["Seno renale", "Uretere", "Vescica", "Uretra"], correct: "Seno renale" },
+                { question: "Quale ormone secernono i reni per i globuli rossi?", options: ["Eritropoietina", "Renina", "Adrenalina", "Insulina"], correct: "Eritropoietina" },
+                { question: "Quale funzione dei reni attiva la vitamina D?", options: ["Elaborazione", "Produzione urina", "Regolazione pressione", "Secrezione ormone"], correct: "Elaborazione" },
+                { question: "Quale struttura trasporta l’urina alla vescica?", options: ["Ureteri", "Uretra", "Calici", "Pelvi"], correct: "Ureteri" },
+                { question: "Quale parte degli ureteri è a contatto con l’urina?", options: ["Mucosa", "Muscolare", "Fibrosa", "Esterna"], correct: "Mucosa" },
+                { question: "Cosa espelle l’urina negli ureteri?", options: ["Tonaca muscolare", "Valvola", "Mucosa", "Capsula"], correct: "Tonaca muscolare" },
+                { question: "Quale percentuale ha la duplicità ureterale?", options: ["0,8%", "5%", "10%", "2%"], correct: "0,8%" },
+                { question: "Quale patologia può comprimere l’uretere?", options: ["Tumori vicini", "Duplicità", "Calcolosi", "Infiammazione"], correct: "Tumori vicini" },
+                { question: "Dove si trova la vescica nell’uomo?", options: ["Sopra la prostata", "Davanti all’utero", "Sotto i reni", "Dietro il retto"], correct: "Sopra la prostata" },
+                { question: "Quale strato della vescica è muscolare?", options: ["Esterno", "Mucoso", "Fibroso", "Interno"], correct: "Esterno" },
+                { question: "Quale dispositivo evita il reflusso nella vescica?", options: ["Antireflusso", "Sfintere", "Valvola", "Muscolo"], correct: "Antireflusso" },
+                { question: "Quale capacità ha la vescica adulta?", options: ["300-400 ml", "100-200 ml", "500-600 ml", "50-100 ml"], correct: "300-400 ml" },
+                { question: "Cosa regola la chiusura della vescica?", options: ["Sfintere uretrale", "Muscolo estrusore", "Valvola", "Mucosa"], correct: "Sfintere uretrale" },
+                { question: "Quale fase svuota la vescica?", options: ["Contrazione", "Riempimento", "Rilassamento", "Trasporto"], correct: "Contrazione" },
+                { question: "Quale organo elimina l’urina nella donna?", options: ["Uretra", "Vescica", "Ureteri", "Reni"], correct: "Uretra" },
+                { question: "Qual è la lunghezza dell’uretra femminile?", options: ["3-4 cm", "8 cm", "12 cm", "25 cm"], correct: "3-4 cm" },
+                { question: "Dove si apre l’uretra maschile anteriore?", options: ["Glande", "Prostata", "Scroto", "Rene"], correct: "Glande" },
+                { question: "Quale parte dell’uretra maschile è lunga 4 cm?", options: ["Posteriore", "Anteriore", "Centrale", "Esterna"], correct: "Posteriore" },
+                { question: "Cosa trasporta l’uretra maschile oltre all’urina?", options: ["Sperma", "Sangue", "Bile", "Saliva"], correct: "Sperma" },
+                { question: "Quale tessuto circonda l’uretra anteriore?", options: ["Corpo spugnoso", "Prostata", "Muscolo liscio", "Mucosa"], correct: "Corpo spugnoso" },
+                { question: "Dove si innestano i dotti eiaculatori nell’uomo?", options: ["Uretra prostatica", "Uretra anteriore", "Vescica", "Ureteri"], correct: "Uretra prostatica" },
+                { question: "Quale organo raccoglie l’urina dai reni?", options: ["Vescica", "Ureteri", "Uretra", "Pelvi"], correct: "Vescica" },
+                { question: "Quale parte del rene contiene le piramidi?", options: ["Midollare", "Corticale", "Pelvi", "Calici"], correct: "Midollare" },
+                { question: "Quale organo filtra il sangue?", options: ["Reni", "Vescica", "Ureteri", "Uretra"], correct: "Reni" },
+                { question: "Quale struttura impedisce il reflusso negli ureteri?", options: ["Valvola", "Sfintere", "Muscolo", "Capsula"], correct: "Valvola" },
+                { question: "Quale fase riempie la vescica?", options: ["Riempimento", "Svuotamento", "Contrazione", "Rilassamento"], correct: "Riempimento" },
+                { question: "Quale parte dell’uretra è rettilinea nella donna?", options: ["Tutta", "Anteriore", "Posteriore", "Centrale"], correct: "Tutta" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>

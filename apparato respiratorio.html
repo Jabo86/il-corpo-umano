@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sull'apparato respiratorio per l'Operatore Socio-Sanitario (OSS): scopri organi, funzioni e quiz interattivi.">
+    <meta name="keywords" content="apparato respiratorio, OSS, polmoni, trachea, quiz respiratorio">
+    <title>L'Apparato Respiratorio</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>L'Apparato Respiratorio</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#naso">Naso</a>
+        <a href="#faringe-laringe-trachea">Faringe, Laringe, Trachea</a>
+        <a href="#bronchi-bronchioli">Bronchi e Bronchioli</a>
+        <a href="#polmoni">Polmoni</a>
+        <a href="#pleura">Pleura</a>
+        <a href="#inspirazione-espirazione">Inspirazione ed Espirazione</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione all'Apparato Respiratorio</h2>
+            <p>L’apparato respiratorio è l’insieme degli organi e delle strutture che consentono gli scambi gassosi tra l’ambiente circostante (ricco di ossigeno) e l’organismo umano (il cui sangue è carico di anidride carbonica). È strettamente connesso al sistema circolatorio ed è formato da: naso e bocca, faringe, laringe, trachea, bronchi e bronchioli, polmoni e pleura.</p>
+        </section>
+
+        <section id="naso">
+            <h2>Il Naso</h2>
+            <p>Il naso, situato al centro del viso, è la parte iniziale delle vie respiratorie. Coinvolto in funzioni respiratorie e olfattive, è composto da ossa e cartilagine che formano una struttura sporgente. Le fosse nasali, rivestite di mucosa, si aprono nelle narici.</p>
+        </section>
+
+        <section id="faringe-laringe-trachea">
+            <h2>Faringe, Laringe e Trachea</h2>
+            <h3>La Faringe</h3>
+            <p>La faringe è un canale muscolo-mucoso che collega la gola all’esofago. È parte delle vie aeree superiori (riceve aria dal naso verso la laringe) e del tubo digerente (trasporta il bolo dalla bocca).</p>
+            <h3>La Laringe</h3>
+            <p>La laringe è un cilindro cavo responsabile della fonazione e del passaggio dell’aria tra naso/bocca e bronchi. Durante la deglutizione, un dispositivo di chiusura impedisce l’ingresso del bolo alimentare.</p>
+            <h3>La Trachea</h3>
+            <p>La trachea collega la laringe ai bronchi, biforcandosi alla quinta vertebra dorsale nei due alberi bronchiali (destro e sinistro).</p>
+        </section>
+
+        <section id="bronchi-bronchioli">
+            <h2>Bronchi e Bronchioli</h2>
+            <p><strong>I Bronchi:</strong> Sono condotti cilindrici tra trachea e bronchioli, che permettono il passaggio dell’aria. Nel corpo umano sono due: bronco destro e sinistro.</p>
+            <p><strong>I Bronchioli:</strong> Sono diramazioni terminali dei bronchi (diametro <1 mm) con pareti di epitelio cubico, muscolatura liscia e tessuto elastico. Terminano negli alveoli polmonari, dove avvengono gli scambi gassosi.</p>
+        </section>
+
+        <section id="polmoni">
+            <h2>I Polmoni</h2>
+            <p>I polmoni, situati nella cavità toracica, forniscono ossigeno ed eliminano anidride carbonica (ematosi). Separati dal mediastino, hanno un apice superiore e poggiano sul diaframma. Sono elastici e avvolti dalla pleura.</p>
+        </section>
+
+        <section id="pleura">
+            <h2>La Pleura</h2>
+            <p>La pleura è la membrana sierosa che ricopre i polmoni, formata da due foglietti: pleura parietale (esterna) e pleura viscerale (interna). Facilita l’espansione e lo scorrimento dei polmoni durante la respirazione.</p>
+        </section>
+
+        <section id="inspirazione-espirazione">
+            <h2>Inspirazione ed Espirazione</h2>
+            <p>La respirazione avviene in due fasi: <strong>inspirazione</strong> (ingresso dell’aria negli alveoli) ed <strong>espirazione</strong> (espulsione dell’aria). È regolata dal diaframma e da muscoli volontari. Negli alveoli avviene lo scambio gassoso: l’ossigeno passa al sangue, l’anidride carbonica viene espulsa.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sull'Apparato Respiratorio</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 L'Apparato Respiratorio - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Qual è la funzione principale dell’apparato respiratorio?", options: ["Scambi gassosi", "Digestione", "Circolazione", "Filtraggio"], correct: "Scambi gassosi" },
+                { question: "Quale organo è l’inizio delle vie respiratorie?", options: ["Naso", "Faringe", "Laringe", "Trachea"], correct: "Naso" },
+                { question: "Quale struttura collega la gola ai bronchi?", options: ["Trachea", "Faringe", "Laringe", "Bronchioli"], correct: "Trachea" },
+                { question: "Quale organo è responsabile della fonazione?", options: ["Laringe", "Faringe", "Trachea", "Polmoni"], correct: "Laringe" },
+                { question: "Quanti bronchi principali ci sono?", options: ["Due", "Uno", "Tre", "Quattro"], correct: "Due" },
+                { question: "Dove avvengono gli scambi gassosi?", options: ["Alveoli", "Bronchi", "Trachea", "Faringe"], correct: "Alveoli" },
+                { question: "Quale organo è avvolto dalla pleura?", options: ["Polmoni", "Trachea", "Bronchi", "Laringe"], correct: "Polmoni" },
+                { question: "Quale foglietto pleurico aderisce al polmone?", options: ["Viscerale", "Parietale", "Mediastinico", "Diaframmatico"], correct: "Viscerale" },
+                { question: "Quale muscolo si abbassa nell’inspirazione?", options: ["Diaframma", "Sterno", "Pettorale", "Intercostale"], correct: "Diaframma" },
+                { question: "Quale processo è detto ematosi?", options: ["Scambi gassosi", "Ventilazione", "Fonazione", "Diffusione"], correct: "Scambi gassosi" },
+                { question: "Quale parte del naso si apre all’esterno?", options: ["Narici", "Fosse nasali", "Mucosa", "Cartilagine"], correct: "Narici" },
+                { question: "Quale organo riceve aria dal naso?", options: ["Faringe", "Laringe", "Trachea", "Bronchi"], correct: "Faringe" },
+                { question: "Dove si biforca la trachea?", options: ["Quinta vertebra dorsale", "Prima vertebra", "Settima vertebra", "Mediastino"], correct: "Quinta vertebra dorsale" },
+                { question: "Quale struttura dei bronchioli ha epitelio cubico?", options: ["Pareti", "Alveoli", "Muscolatura", "Infundiboli"], correct: "Pareti" },
+                { question: "Quale spazio separa i polmoni?", options: ["Mediastino", "Pleura", "Diaframma", "Torace"], correct: "Mediastino" },
+                { question: "Quale funzione ha la pleura parietale?", options: ["Divide dalla parete toracica", "Aderisce al polmone", "Espelle aria", "Filtra sangue"], correct: "Divide dalla parete toracica" },
+                { question: "Cosa espelle l’aria dai polmoni?", options: ["Espirazione", "Inspirazione", "Ventilazione", "Diffusione"], correct: "Espirazione" },
+                { question: "Quale tecnica è usata in emergenza?", options: ["Bocca a bocca", "Spirometria", "Emogasanalisi", "Radiografia"], correct: "Bocca a bocca" },
+                { question: "Dove avviene la respirazione cellulare?", options: ["Mitocondri", "Alveoli", "Capillari", "Bronchi"], correct: "Mitocondri" },
+                { question: "Quale gas è eliminato dai polmoni?", options: ["Anidride carbonica", "Ossigeno", "Azoto", "Idrogeno"], correct: "Anidride carbonica" },
+                { question: "Quale funzione ha il naso oltre alla respirazione?", options: ["Olfattiva", "Digestiva", "Fonatoria", "Circolatoria"], correct: "Olfattiva" },
+                { question: "Quale organo chiude le vie aeree durante la deglutizione?", options: ["Laringe", "Faringe", "Trachea", "Bronchi"], correct: "Laringe" },
+                { question: "Quale parte dei polmoni poggia sul diaframma?", options: ["Estremità inferiore", "Apice", "Mediastino", "Pleura"], correct: "Estremità inferiore" },
+                { question: "Quale processo è lo scambio aria-atmosfera?", options: ["Ventilazione", "Respirazione", "Ematosi", "Diffusione"], correct: "Ventilazione" },
+                { question: "Quale malattia causa insufficienza respiratoria?", options: ["Asma", "Cirrosi", "Diabete", "Ulcera"], correct: "Asma" },
+                { question: "Quale sintomo è tipico dell’insufficienza cronica?", options: ["Tosse secca", "Fevere", "Nausea", "Diarrea"], correct: "Tosse secca" },
+                { question: "Quale esame misura i gas nel sangue?", options: ["Emogasanalisi", "Spirometria", "Radiografia", "Espettorato"], correct: "Emogasanalisi" },
+                { question: "Quale struttura dei bronchioli è a grappolo?", options: ["Sacchi alveolari", "Pareti", "Muscolatura", "Epitelio"], correct: "Sacchi alveolari" },
+                { question: "Quale organo è elastico?", options: ["Polmoni", "Trachea", "Faringe", "Bronchi"], correct: "Polmoni" },
+                { question: "Quale foglietto pleurico è esterno?", options: ["Parietale", "Viscerale", "Mediastinico", "Toracico"], correct: "Parietale" }
+            ],
+            // Quiz 2
+            [
+                { question: "Con quale sistema è connesso l’apparato respiratorio?", options: ["Circolatorio", "Digerente", "Nervoso", "Muscolare"], correct: "Circolatorio" },
+                { question: "Quale organo ha le fosse nasali?", options: ["Naso", "Faringe", "Laringe", "Trachea"], correct: "Naso" },
+                { question: "Quale struttura è muscolo-mucosa?", options: ["Faringe", "Laringe", "Trachea", "Bronchi"], correct: "Faringe" },
+                { question: "Quale organo collega la laringe ai bronchi?", options: ["Trachea", "Faringe", "Polmoni", "Bronchioli"], correct: "Trachea" },
+                { question: "Quali condotti sono cilindrici?", options: ["Bronchi", "Bronchioli", "Alveoli", "Trachea"], correct: "Bronchi" },
+                { question: "Quale struttura termina negli alveoli?", options: ["Bronchioli", "Bronchi", "Trachea", "Faringe"], correct: "Bronchioli" },
+                { question: "Quale organo si espande nell’inspirazione?", options: ["Polmoni", "Trachea", "Laringe", "Faringe"], correct: "Polmoni" },
+                { question: "Quale membrana ricopre i polmoni?", options: ["Pleura", "Mediastino", "Diaframma", "Mucosa"], correct: "Pleura" },
+                { question: "Quale fase assume ossigeno?", options: ["Inspirazione", "Espirazione", "Ventilazione", "Diffusione"], correct: "Inspirazione" },
+                { question: "Quale muscolo si alza nell’espirazione?", options: ["Diaframma", "Intercostale", "Sterno", "Pettorale"], correct: "Diaframma" },
+                { question: "Quale parte del naso è rivestita di mucosa?", options: ["Fosse nasali", "Narici", "Cartilagine", "Ossa"], correct: "Fosse nasali" },
+                { question: "Quale organo è un cilindro cavo?", options: ["Laringe", "Faringe", "Trachea", "Bronchi"], correct: "Laringe" },
+                { question: "Quanti alberi bronchiali ci sono?", options: ["Due", "Uno", "Tre", "Quattro"], correct: "Due" },
+                { question: "Quale parte dei polmoni è superiore?", options: ["Apice", "Base", "Mediastino", "Pleura"], correct: "Apice" },
+                { question: "Quale funzione ha la pleura viscerale?", options: ["Aderisce al polmone", "Divide dal torace", "Espelle aria", "Filtra sangue"], correct: "Aderisce al polmone" },
+                { question: "Dove passa l’aria dopo la trachea?", options: ["Bronchi", "Laringe", "Faringe", "Alveoli"], correct: "Bronchi" },
+                { question: "Quale processo avviene nei capillari polmonari?", options: ["Diffusione", "Ventilazione", "Fonazione", "Inspirazione"], correct: "Diffusione" },
+                { question: "Quale gas è assunto dall’aria?", options: ["Ossigeno", "Anidride carbonica", "Azoto", "Elio"], correct: "Ossigeno" },
+                { question: "Quale organo è nel torace?", options: ["Polmoni", "Faringe", "Naso", "Esofago"], correct: "Polmoni" },
+                { question: "Quale tecnica inclina la testa indietro?", options: ["Bocca a bocca", "Spirometria", "Emogasanalisi", "Radiografia"], correct: "Bocca a bocca" },
+                { question: "Quale struttura del naso è tortuosa?", options: ["Fosse nasali", "Narici", "Mucosa", "Cartilagine"], correct: "Fosse nasali" },
+                { question: "Quale organo riceve il bolo oltre all’aria?", options: ["Faringe", "Laringe", "Trachea", "Bronchi"], correct: "Faringe" },
+                { question: "Quale parte dei bronchioli ha muscolatura liscia?", options: ["Pareti", "Alveoli", "Infundiboli", "Epitelio"], correct: "Pareti" },
+                { question: "Quale spazio contiene il cuore?", options: ["Mediastino", "Pleura", "Diaframma", "Torace"], correct: "Mediastino" },
+                { question: "Quale malattia è cronica?", options: ["Enfisema", "Influenza", "Diabete", "Gastrite"], correct: "Enfisema" },
+                { question: "Quale sintomo è dell’insufficienza acuta?", options: ["Sudorazione fredda", "Tosse secca", "Fischi", "Catarro"], correct: "Sudorazione fredda" },
+                { question: "Quale esame valuta i volumi respiratori?", options: ["Spirometria", "Emogasanalisi", "Radiografia", "Espettorato"], correct: "Spirometria" },
+                { question: "Quale struttura è tra bronchi e alveoli?", options: ["Bronchioli", "Trachea", "Laringe", "Faringe"], correct: "Bronchioli" },
+                { question: "Quale organo filtra il sangue?", options: ["Polmoni", "Trachea", "Faringe", "Laringe"], correct: "Polmoni" },
+                { question: "Quale fase espelle anidride carbonica?", options: ["Espirazione", "Inspirazione", "Ventilazione", "Diffusione"], correct: "Espirazione" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale gas assume l’apparato respiratorio?", options: ["Ossigeno", "Anidride carbonica", "Azoto", "Idrogeno"], correct: "Ossigeno" },
+                { question: "Quale organo ha le narici?", options: ["Naso", "Faringe", "Laringe", "Trachea"], correct: "Naso" },
+                { question: "Quale struttura è parte del tubo digerente?", options: ["Faringe", "Laringe", "Trachea", "Bronchi"], correct: "Faringe" },
+                { question: "Quale organo ha un dispositivo di chiusura?", options: ["Laringe", "Faringe", "Trachea", "Polmoni"], correct: "Laringe" },
+                { question: "Dove si dividono i bronchi?", options: ["Trachea", "Bronchioli", "Alveoli", "Faringe"], correct: "Trachea" },
+                { question: "Quale struttura ha diametro inferiore a 1 mm?", options: ["Bronchioli", "Bronchi", "Trachea", "Laringe"], correct: "Bronchioli" },
+                { question: "Quale organo elimina anidride carbonica?", options: ["Polmoni", "Trachea", "Laringe", "Faringe"], correct: "Polmoni" },
+                { question: "Quale foglietto pleurico è parietale?", options: ["Esterno", "Interno", "Mediastinico", "Viscerale"], correct: "Esterno" },
+                { question: "Quale muscolo consente l’espansione polmonare?", options: ["Diaframma", "Sterno", "Pettorale", "Intercostale"], correct: "Diaframma" },
+                { question: "Quale processo avviene negli alveoli?", options: ["Respirazione esterna", "Ventilazione", "Fonazione", "Inspirazione"], correct: "Respirazione esterna" },
+                { question: "Quale parte del naso è sporgente?", options: ["Struttura esterna", "Fosse nasali", "Mucosa", "Narici"], correct: "Struttura esterna" },
+                { question: "Quale organo è tra naso e trachea?", options: ["Laringe", "Faringe", "Bronchi", "Polmoni"], correct: "Laringe" },
+                { question: "Quale struttura si biforca nei polmoni?", options: ["Trachea", "Bronchi", "Bronchioli", "Alveoli"], correct: "Trachea" },
+                { question: "Quale parte dei polmoni è al collo?", options: ["Apice", "Base", "Mediastino", "Pleura"], correct: "Apice" },
+                { question: "Quale funzione ha la pleura?", options: ["Scorrimento polmoni", "Filtra aria", "Espelle CO2", "Fonazione"], correct: "Scorrimento polmoni" },
+                { question: "Dove va l’aria dopo i bronchioli?", options: ["Alveoli", "Bronchi", "Trachea", "Faringe"], correct: "Alveoli" },
+                { question: "Quale processo è cellulare?", options: ["Respirazione interna", "Ventilazione", "Inspirazione", "Diffusione"], correct: "Respirazione interna" },
+                { question: "Quale organo è nel mediastino?", options: ["Cuore", "Polmoni", "Trachea", "Faringe"], correct: "Cuore" },
+                { question: "Quale tecnica chiude le narici?", options: ["Bocca a bocca", "Spirometria", "Emogasanalisi", "Radiografia"], correct: "Bocca a bocca" },
+                { question: "Quale gas è espulso nell’espirazione?", options: ["Anidride carbonica", "Ossigeno", "Azoto", "Elio"], correct: "Anidride carbonica" },
+                { question: "Quale parte del naso ha ossa?", options: ["Struttura esterna", "Fosse nasali", "Mucosa", "Narici"], correct: "Struttura esterna" },
+                { question: "Quale organo passa aria ai bronchi?", options: ["Trachea", "Laringe", "Faringe", "Naso"], correct: "Trachea" },
+                { question: "Quale struttura dei bronchioli è elastica?", options: ["Tessuto connettivale", "Epitelio", "Alveoli", "Muscolatura"], correct: "Tessuto connettivale" },
+                { question: "Quale organo è sufficiente per respirare?", options: ["Un polmone", "Trachea", "Faringe", "Bronchi"], correct: "Un polmone" },
+                { question: "Quale sintomo è dell’insufficienza cronica?", options: ["Fischi respiratori", "Sudorazione", "Palpitazioni", "Mal di testa"], correct: "Fischi respiratori" },
+                { question: "Quale esame rileva infezioni?", options: ["Espettorato", "Spirometria", "Emogasanalisi", "Radiografia"], correct: "Espettorato" },
+                { question: "Quale struttura è tra trachea e bronchioli?", options: ["Bronchi", "Laringe", "Faringe", "Alveoli"], correct: "Bronchi" },
+                { question: "Quale organo ha sacchi alveolari?", options: ["Bronchioli", "Polmoni", "Trachea", "Laringe"], correct: "Bronchioli" },
+                { question: "Quale fase assume aria dall’esterno?", options: ["Inspirazione", "Espirazione", "Ventilazione", "Diffusione"], correct: "Inspirazione" },
+                { question: "Quale malattia causa ostruzione?", options: ["Broncopneumopatia", "Cirrosi", "Ulcera", "Diabete"], correct: "Broncopneumopatia" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale gas elimina l’apparato respiratorio?", options: ["Anidride carbonica", "Ossigeno", "Azoto", "Idrogeno"], correct: "Anidride carbonica" },
+                { question: "Quale organo è al centro del viso?", options: ["Naso", "Faringe", "Laringe", "Trachea"], correct: "Naso" },
+                { question: "Quale struttura riceve il bolo?", options: ["Faringe", "Laringe", "Trachea", "Bronchi"], correct: "Faringe" },
+                { question: "Quale organo produce suoni?", options: ["Laringe", "Faringe", "Trachea", "Polmoni"], correct: "Laringe" },
+                { question: "Quale struttura collega trachea e polmoni?", options: ["Bronchi", "Bronchioli", "Alveoli", "Faringe"], correct: "Bronchi" },
+                { question: "Dove termina l’aria inspirata?", options: ["Alveoli", "Bronchi", "Trachea", "Laringe"], correct: "Alveoli" },
+                { question: "Quale organo è nella cavità toracica?", options: ["Polmoni", "Trachea", "Faringe", "Naso"], correct: "Polmoni" },
+                { question: "Quale foglietto pleurico scorre sul torace?", options: ["Parietale", "Viscerale", "Mediastinico", "Diaframmatico"], correct: "Parietale" },
+                { question: "Quale muscolo si contrae nell’inspirazione?", options: ["Diaframma", "Sterno", "Pettorale", "Intercostale"], correct: "Diaframma" },
+                { question: "Quale processo lega ossigeno al sangue?", options: ["Diffusione", "Ventilazione", "Fonazione", "Espirazione"], correct: "Diffusione" },
+                { question: "Quale parte del naso è interna?", options: ["Fosse nasali", "Narici", "Cartilagine", "Ossa"], correct: "Fosse nasali" },
+                { question: "Quale organo è tra faringe e bronchi?", options: ["Trachea", "Laringe", "Polmoni", "Bronchioli"], correct: "Trachea" },
+                { question: "Quale struttura ha due bronchi?", options: ["Polmoni", "Trachea", "Laringe", "Faringe"], correct: "Polmoni" },
+                { question: "Quale parte dei polmoni è inferiore?", options: ["Base", "Apice", "Mediastino", "Pleura"], correct: "Base" },
+                { question: "Quale funzione ha la pleura viscerale?", options: ["Aderisce al polmone", "Divide dal torace", "Espelle aria", "Filtra sangue"], correct: "Aderisce al polmone" },
+                { question: "Dove passa l’aria dopo la laringe?", options: ["Trachea", "Faringe", "Bronchi", "Alveoli"], correct: "Trachea" },
+                { question: "Quale processo è nei mitocondri?", options: ["Respirazione interna", "Ventilazione", "Inspirazione", "Diffusione"], correct: "Respirazione interna" },
+                { question: "Quale organo espelle aria?", options: ["Polmoni", "Trachea", "Faringe", "Laringe"], correct: "Polmoni" },
+                { question: "Quale tecnica solleva la gabbia toracica?", options: ["Bocca a bocca", "Spirometria", "Emogasanalisi", "Radiografia"], correct: "Bocca a bocca" },
+                { question: "Quale struttura del naso è esterna?", options: ["Cartilagine", "Fosse nasali", "Mucosa", "Narici"], correct: "Cartilagine" },
+                { question: "Quale organo ha epitelio cubico?", options: ["Bronchioli", "Bronchi", "Trachea", "Laringe"], correct: "Bronchioli" },
+                { question: "Quale spazio è tra i polmoni?", options: ["Mediastino", "Pleura", "Diaframma", "Torace"], correct: "Mediastino" },
+                { question: "Quale sintomo è dell’insufficienza acuta?", options: ["Palpitazioni", "Tosse secca", "Fischi", "Catarro"], correct: "Palpitazioni" },
+                { question: "Quale esame mostra l’enfisema?", options: ["Radiografia", "Spirometria", "Emogasanalisi", "Espettorato"], correct: "Radiografia" },
+                { question: "Quale struttura è tra laringe e bronchi?", options: ["Trachea", "Faringe", "Alveoli", "Polmoni"], correct: "Trachea" },
+                { question: "Quale organo ha sacchi a grappolo?", options: ["Bronchioli", "Polmoni", "Trachea", "Laringe"], correct: "Bronchioli" },
+                { question: "Quale fase rilassa il diaframma?", options: ["Espirazione", "Inspirazione", "Ventilazione", "Diffusione"], correct: "Espirazione" },
+                { question: "Quale malattia è ostruttiva?", options: ["Asma", "Cirrosi", "Diabete", "Gastrite"], correct: "Asma" },
+                { question: "Quale organo è sopra il diaframma?", options: ["Polmoni", "Trachea", "Faringe", "Naso"], correct: "Polmoni" },
+                { question: "Quale funzione ha il naso?", options: ["Respiratoria", "Digestiva", "Fonatoria", "Circolatoria"], correct: "Respiratoria" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale gas è scambiato con il sangue?", options: ["Ossigeno", "Anidride carbonica", "Azoto", "Idrogeno"], correct: "Ossigeno" },
+                { question: "Quale organo ha la mucosa nasale?", options: ["Naso", "Faringe", "Laringe", "Trachea"], correct: "Naso" },
+                { question: "Quale struttura è tra naso e laringe?", options: ["Faringe", "Trachea", "Bronchi", "Polmoni"], correct: "Faringe" },
+                { question: "Quale organo impedisce al bolo di entrare?", options: ["Laringe", "Faringe", "Trachea", "Bronchi"], correct: "Laringe" },
+                { question: "Quale struttura si divide in due?", options: ["Trachea", "Bronchi", "Bronchioli", "Alveoli"], correct: "Trachea" },
+                { question: "Quale organo ha gli infundiboli?", options: ["Bronchioli", "Bronchi", "Trachea", "Laringe"], correct: "Bronchioli" },
+                { question: "Quale organo purifica il sangue?", options: ["Polmoni", "Trachea", "Faringe", "Laringe"], correct: "Polmoni" },
+                { question: "Quale foglietto pleurico è interno?", options: ["Viscerale", "Parietale", "Mediastinico", "Toracico"], correct: "Viscerale" },
+                { question: "Quale muscolo si rilassa nell’espirazione?", options: ["Diaframma", "Sterno", "Pettorale", "Intercostale"], correct: "Diaframma" },
+                { question: "Quale processo è polmonare?", options: ["Respirazione esterna", "Ventilazione", "Fonazione", "Diffusione"], correct: "Respirazione esterna" },
+                { question: "Quale parte del naso è tortuosa?", options: ["Fosse nasali", "Narici", "Cartilagine", "Ossa"], correct: "Fosse nasali" },
+                { question: "Quale organo è tra trachea e faringe?", options: ["Laringe", "Bronchi", "Polmoni", "Naso"], correct: "Laringe" },
+                { question: "Quale struttura è cilindrica?", options: ["Bronchi", "Bronchioli", "Alveoli", "Trachea"], correct: "Bronchi" },
+                { question: "Quale parte dei polmoni è al diaframma?", options: ["Base", "Apice", "Mediastino", "Pleura"], correct: "Base" },
+                { question: "Quale funzione ha la pleura parietale?", options: ["Divide dal torace", "Aderisce al polmone", "Espelle aria", "Filtra sangue"], correct: "Divide dal torace" },
+                { question: "Dove va l’aria dopo i bronchi?", options: ["Bronchioli", "Trachea", "Laringe", "Faringe"], correct: "Bronchioli" },
+                { question: "Quale processo usa l’ossigeno nelle cellule?", options: ["Respirazione interna", "Ventilazione", "Inspirazione", "Diffusione"], correct: "Respirazione interna" },
+                { question: "Quale organo è tra i polmoni?", options: ["Mediastino", "Pleura", "Diaframma", "Trachea"], correct: "Mediastino" },
+                { question: "Quale tecnica è rianimatoria?", options: ["Bocca a bocca", "Spirometria", "Emogasanalisi", "Radiografia"], correct: "Bocca a bocca" },
+                { question: "Quale struttura del naso è aperta?", options: ["Narici", "Fosse nasali", "Mucosa", "Cartilagine"], correct: "Narici" },
+                { question: "Quale organo ha tessuto elastico?", options: ["Bronchioli", "Bronchi", "Trachea", "Laringe"], correct: "Bronchioli" },
+                { question: "Quale sintomo è dell’insufficienza cronica?", options: ["Cianosi", "Sudorazione", "Palpitazioni", "Mal di testa"], correct: "Cianosi" },
+                { question: "Quale esame valuta il sangue arterioso?", options: ["Emogasanalisi", "Spirometria", "Radiografia", "Espettorato"], correct: "Emogasanalisi" },
+                { question: "Quale struttura è tra faringe e trachea?", options: ["Laringe", "Bronchi", "Alveoli", "Polmoni"], correct: "Laringe" },
+                { question: "Quale organo ha alta elasticità?", options: ["Polmoni", "Trachea", "Faringe", "Bronchi"], correct: "Polmoni" },
+                { question: "Quale fase assume ossigeno dall’esterno?", options: ["Inspirazione", "Espirazione", "Ventilazione", "Diffusione"], correct: "Inspirazione" },
+                { question: "Quale malattia causa tosse?", options: ["Bronchite", "Cirrosi", "Diabete", "Ulcera"], correct: "Bronchite" },
+                { question: "Quale organo è sotto il collo?", options: ["Polmoni", "Trachea", "Faringe", "Naso"], correct: "Polmoni" },
+                { question: "Quale funzione ha la laringe?", options: ["Fonatoria", "Digestiva", "Olfattiva", "Circolatoria"], correct: "Fonatoria" },
+                { question: "Quale gas è prodotto dalle cellule?", options: ["Anidride carbonica", "Ossigeno", "Azoto", "Elio"], correct: "Anidride carbonica" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>

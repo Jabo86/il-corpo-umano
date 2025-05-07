@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sulle articolazioni per l'Operatore Socio-Sanitario (OSS): scopri tipi, funzioni e quiz interattivi.">
+    <meta name="keywords" content="articolazioni, OSS, diartrosi, anfiartrosi, sinartrosi, quiz articolare">
+    <title>Le Articolazioni</title>
+    <style>
+        /* Stili identici al tuo esempio originale */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Le Articolazioni</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#articolazioni-mobili">Articolazioni Mobili</a>
+        <a href="#articolazioni-semimobili">Articolazioni Semimobili</a>
+        <a href="#articolazioni-fisse">Articolazioni Fisse</a>
+        <a href="#movimenti">Principali Movimenti</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione alle Articolazioni</h2>
+            <p>Con il termine "articolazione" in anatomia si fa riferimento a un complesso di strutture che mantiene in contiguità due o più superfici ossee. L’articolazione rappresenta un insieme di elementi (tessuto fibroso e/o cartilagineo, legamenti, capsule, membrane) che regolano la connessione tra due segmenti scheletrici. A seconda della loro funzione, le articolazioni possono essere mobili (diartrosi), semimobili (anfiartrosi) o fisse (sinartrosi).</p>
+        </section>
+
+        <section id="articolazioni-mobili">
+            <h2>Articolazioni Mobili (Diartrosi)</h2>
+            <p>Le articolazioni mobili, o diartrosi, sono deputate al movimento. Sono formate da superfici articolari lisce, ricoperte di cartilagine e racchiuse in una capsula articolare. Esempi includono le articolazioni del ginocchio, gomito, spalla e anca. La capsula articolare, composta da una membrana fibrosa esterna e una membrana sinoviale interna, produce il liquido sinoviale per lubrificare e facilitare il movimento.</p>
+            <p><strong>A cosa servono?</strong> Consentono ampi movimenti grazie alla conformazione delle superfici articolari (piatte, sferiche, ellissoidali), che sono spesso "concordanti", cioè una superficie abbraccia l’altra.</p>
+        </section>
+
+        <section id="articolazioni-semimobili">
+            <h2>Articolazioni Semimobili (Anfiartrosi)</h2>
+            <p>Le articolazioni semimobili, o anfiartrosi, permettono movimenti limitati. Un esempio è l’articolazione della colonna vertebrale. Le ossa, rivestite di cartilagine, sono unite da legamenti interossei e periferici che restringono l’ampiezza dei movimenti.</p>
+            <p><strong>A cosa servono?</strong> Offrono un compromesso tra stabilità e mobilità, consentendo solo alcuni movimenti specifici.</p>
+        </section>
+
+        <section id="articolazioni-fisse">
+            <h2>Articolazioni Fisse (Sinartrosi)</h2>
+            <p>Le articolazioni fisse, o sinartrosi, stabilizzano parti del corpo e non permettono movimenti. Esempi sono le suture del cranio e le articolazioni del bacino. Sono caratterizzate dalla continuità dei segmenti ossei, uniti da tessuto fibroso (suture, sindesmosi), cartilagine ialina (sincondrosi) o tessuto osseo (sinostosi).</p>
+            <p><strong>A cosa servono?</strong> Conferiscono stabilità strutturale a determinate aree del corpo.</p>
+        </section>
+
+        <section id="movimenti">
+            <h2>Principali Movimenti delle Articolazioni</h2>
+            <ul>
+                <li><strong>Flessione:</strong> Diminuisce l’angolo tra le ossa in un’articolazione.</li>
+                <li><strong>Estensione:</strong> Riporta un’articolazione flessa alla posizione anatomica.</li>
+                <li><strong>Abduzione:</strong> Allontana un arto dalla linea mediana del corpo.</li>
+                <li><strong>Adduzione:</strong> Avvicina un arto alla linea mediana del corpo.</li>
+                <li><strong>Circonduzione:</strong> Movimento rotatorio della testa di un osso all’interno dell’articolazione.</li>
+            </ul>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sulle Articolazioni</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Le Articolazioni - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Cosa si intende per 'articolazione' in anatomia?", options: ["Connessione tra ossa", "Muscolo contratto", "Tessuto nervoso", "Organo interno"], correct: "Connessione tra ossa" },
+                { question: "Quale tipo di articolazione è mobile?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale struttura lubrifica le diartrosi?", options: ["Liquido sinoviale", "Cartilagine", "Legamenti", "Tessuto osseo"], correct: "Liquido sinoviale" },
+                { question: "Quale articolazione è un esempio di diartrosi?", options: ["Ginocchio", "Cranio", "Bacino", "Colonna vertebrale"], correct: "Ginocchio" },
+                { question: "Cosa circonda le articolazioni mobili?", options: ["Capsula articolare", "Membrana ossea", "Tessuto muscolare", "Pelle"], correct: "Capsula articolare" },
+                { question: "Quale tipo di articolazione è semimobile?", options: ["Anfiartrosi", "Diartrosi", "Sinartrosi", "Sindrome"], correct: "Anfiartrosi" },
+                { question: "Quale esempio rappresenta un’anfiartrosi?", options: ["Colonna vertebrale", "Spalla", "Cranio", "Anca"], correct: "Colonna vertebrale" },
+                { question: "Cosa unisce le ossa nelle anfiartrosi?", options: ["Legamenti", "Liquido sinoviale", "Tessuto osseo", "Muscoli"], correct: "Legamenti" },
+                { question: "Quale articolazione è fissa?", options: ["Sinartrosi", "Diartrosi", "Anfiartrosi", "Capsula"], correct: "Sinartrosi" },
+                { question: "Quale struttura è un esempio di sinartrosi?", options: ["Suture del cranio", "Gomito", "Polso", "Caviglia"], correct: "Suture del cranio" },
+                { question: "Cosa si interpone nelle sinartrosi?", options: ["Tessuto fibroso", "Liquido sinoviale", "Muscolatura", "Cartilagine mobile"], correct: "Tessuto fibroso" },
+                { question: "Quale movimento diminuisce l’angolo tra le ossa?", options: ["Flessione", "Estensione", "Abduzione", "Adduzione"], correct: "Flessione" },
+                { question: "Quale movimento riporta l’articolazione alla posizione anatomica?", options: ["Estensione", "Flessione", "Circonduzione", "Abduzione"], correct: "Estensione" },
+                { question: "Quale movimento allontana un arto dal corpo?", options: ["Abduzione", "Adduzione", "Flessione", "Estensione"], correct: "Abduzione" },
+                { question: "Quale movimento avvicina un arto alla linea mediana?", options: ["Adduzione", "Abduzione", "Circonduzione", "Flessione"], correct: "Adduzione" },
+                { question: "Quale movimento è rotatorio?", options: ["Circonduzione", "Flessione", "Estensione", "Abduzione"], correct: "Circonduzione" },
+                { question: "Quale tessuto ricopre le superfici delle diartrosi?", options: ["Cartilagine", "Tessuto fibroso", "Muscolo", "Pelle"], correct: "Cartilagine" },
+                { question: "Quale parte della capsula articolare è interna?", options: ["Membrana sinoviale", "Membrana fibrosa", "Legamenti", "Cartilagine"], correct: "Membrana sinoviale" },
+                { question: "Quale forma possono avere le superfici articolari mobili?", options: ["Sferica", "Ruvida", "Dentata", "Irregolare"], correct: "Sferica" },
+                { question: "Cosa limita i movimenti nelle anfiartrosi?", options: ["Legamenti interossei", "Liquido sinoviale", "Capsula articolare", "Tessuto osseo"], correct: "Legamenti interossei" },
+                { question: "Quale tipo di sinartrosi è formata da cartilagine ialina?", options: ["Sincondrosi", "Suture", "Sindesmosi", "Sinostosi"], correct: "Sincondrosi" },
+                { question: "Quale tipo di sinartrosi è formata da tessuto osseo?", options: ["Sinostosi", "Sincondrosi", "Suture", "Sindesmosi"], correct: "Sinostosi" },
+                { question: "Quale articolazione mobile si trova nel braccio?", options: ["Gomito", "Cranio", "Bacino", "Vertebre"], correct: "Gomito" },
+                { question: "Quale funzione hanno le articolazioni fisse?", options: ["Stabilità", "Mobilità", "Flessibilità", "Rotazione"], correct: "Stabilità" },
+                { question: "Quale articolazione consente movimenti limitati?", options: ["Colonna vertebrale", "Ginocchio", "Spalla", "Cranio"], correct: "Colonna vertebrale" },
+                { question: "Quale elemento è assente nelle sinartrosi?", options: ["Liquido sinoviale", "Tessuto fibroso", "Cartilagine", "Legamenti"], correct: "Liquido sinoviale" },
+                { question: "Quale movimento è tipico della spalla?", options: ["Circonduzione", "Flessione limitata", "Stabilità fissa", "Adduzione fissa"], correct: "Circonduzione" },
+                { question: "Quale tipo di articolazione è la caviglia?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale struttura stabilizza le ossa del bacino?", options: ["Sinartrosi", "Diartrosi", "Anfiartrosi", "Capsula"], correct: "Sinartrosi" },
+                { question: "Quale componente è esterno alla capsula articolare?", options: ["Membrana fibrosa", "Membrana sinoviale", "Cartilagine", "Liquido"], correct: "Membrana fibrosa" }
+            ],
+            // Quiz 2
+            [
+                { question: "Quale tipo di articolazione permette ampi movimenti?", options: ["Diartrosi", "Sinartrosi", "Anfiartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Chi produce il liquido sinoviale?", options: ["Membrana sinoviale", "Cartilagine", "Legamenti", "Tessuto osseo"], correct: "Membrana sinoviale" },
+                { question: "Quale articolazione mobile si trova nella gamba?", options: ["Caviglia", "Cranio", "Vertebre", "Bacino"], correct: "Caviglia" },
+                { question: "Quale struttura è assente nelle articolazioni fisse?", options: ["Capsula articolare", "Tessuto fibroso", "Cartilagine", "Legamenti"], correct: "Capsula articolare" },
+                { question: "Quale tipo di articolazione è la spalla?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Sindesmosi"], correct: "Diartrosi" },
+                { question: "Quale esempio è una sinartrosi?", options: ["Ossa del bacino", "Polso", "Ginocchio", "Colonna"], correct: "Ossa del bacino" },
+                { question: "Quale movimento è tipico del gomito?", options: ["Flessione", "Stabilità", "Circonduzione completa", "Adduzione fissa"], correct: "Flessione" },
+                { question: "Quale tessuto è presente nelle suture craniche?", options: ["Tessuto fibroso", "Cartilagine", "Liquido sinoviale", "Muscolo"], correct: "Tessuto fibroso" },
+                { question: "Quale articolazione semimobile è nel torso?", options: ["Colonna vertebrale", "Anca", "Spalla", "Cranio"], correct: "Colonna vertebrale" },
+                { question: "Quale funzione ha la cartilagine nelle diartrosi?", options: ["Riduce attrito", "Stabilizza", "Blocca il movimento", "Produce liquido"], correct: "Riduce attrito" },
+                { question: "Quale tipo di sinartrosi unisce le coste allo sterno?", options: ["Sincondrosi", "Suture", "Sinostosi", "Sindesmosi"], correct: "Sincondrosi" },
+                { question: "Quale movimento allontana la gamba dal corpo?", options: ["Abduzione", "Adduzione", "Flessione", "Estensione"], correct: "Abduzione" },
+                { question: "Quale parte della capsula articolare è fibrosa?", options: ["Esterna", "Interna", "Sinoviale", "Cartilaginea"], correct: "Esterna" },
+                { question: "Quale articolazione non si muove?", options: ["Cranio", "Ginocchio", "Spalla", "Polso"], correct: "Cranio" },
+                { question: "Quale tipo di articolazione è l’anca?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Cosa collega le vertebre nelle anfiartrosi?", options: ["Legamenti interossei", "Capsula articolare", "Liquido sinoviale", "Tessuto osseo"], correct: "Legamenti interossei" },
+                { question: "Quale movimento è tipico del polso?", options: ["Flessione", "Stabilità fissa", "Circonduzione limitata", "Adduzione"], correct: "Flessione" },
+                { question: "Quale tipo di sinartrosi è permanente?", options: ["Sinostosi", "Sincondrosi", "Suture", "Sindesmosi"], correct: "Sinostosi" },
+                { question: "Quale superficie articolare è tipica delle diartrosi?", options: ["Sferica", "Dentata", "Ruvida", "Fissa"], correct: "Sferica" },
+                { question: "Quale funzione hanno le anfiartrosi?", options: ["Mobilità limitata", "Stabilità totale", "Movimento ampio", "Rotazione"], correct: "Mobilità limitata" },
+                { question: "Quale articolazione è tra cranio e vertebre?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Capsula"], correct: "Diartrosi" },
+                { question: "Quale movimento riporta il braccio al corpo?", options: ["Adduzione", "Abduzione", "Flessione", "Estensione"], correct: "Adduzione" },
+                { question: "Quale elemento manca nelle anfiartrosi rispetto alle diartrosi?", options: ["Liquido sinoviale", "Legamenti", "Cartilagine", "Tessuto fibroso"], correct: "Liquido sinoviale" },
+                { question: "Quale tipo di articolazione è tra le ossa del piede?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale struttura stabilizza le suture?", options: ["Tessuto fibroso", "Cartilagine", "Liquido sinoviale", "Muscoli"], correct: "Tessuto fibroso" },
+                { question: "Quale movimento è tipico della testa?", options: ["Circonduzione", "Flessione limitata", "Stabilità", "Adduzione"], correct: "Circonduzione" },
+                { question: "Quale articolazione è nel bacino?", options: ["Sinartrosi", "Diartrosi", "Anfiartrosi", "Capsula"], correct: "Sinartrosi" },
+                { question: "Quale funzione ha la membrana sinoviale?", options: ["Secerne liquido", "Stabilizza ossa", "Blocca movimenti", "Ricopre ossa"], correct: "Secerne liquido" },
+                { question: "Quale tipo di movimento è escluso nelle sinartrosi?", options: ["Flessione", "Stabilità", "Ancoraggio", "Rigidità"], correct: "Flessione" },
+                { question: "Quale articolazione mobile è nella mano?", options: ["Polso", "Cranio", "Vertebre", "Bacino"], correct: "Polso" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale articolazione è definita sinartrosi?", options: ["Fissa", "Mobile", "Semimobile", "Rotatoria"], correct: "Fissa" },
+                { question: "Quale struttura è tipica delle diartrosi?", options: ["Capsula articolare", "Tessuto fibroso", "Legamenti interossei", "Sinostosi"], correct: "Capsula articolare" },
+                { question: "Quale movimento è escluso nelle anfiartrosi?", options: ["Circonduzione completa", "Flessione limitata", "Estensione limitata", "Stabilità"], correct: "Circonduzione completa" },
+                { question: "Quale articolazione mobile è nel torso?", options: ["Spalla", "Cranio", "Bacino", "Vertebre"], correct: "Spalla" },
+                { question: "Quale tipo di sinartrosi è tra le ossa craniche?", options: ["Suture", "Sincondrosi", "Sinostosi", "Sindesmosi"], correct: "Suture" },
+                { question: "Quale elemento riduce l’attrito nelle articolazioni mobili?", options: ["Cartilagine", "Tessuto fibroso", "Legamenti", "Ossa"], correct: "Cartilagine" },
+                { question: "Quale articolazione semimobile è tra le coste?", options: ["Costovertebrale", "Ginocchio", "Spalla", "Cranio"], correct: "Costovertebrale" },
+                { question: "Quale movimento è tipico del ginocchio?", options: ["Flessione", "Stabilità", "Circonduzione completa", "Adduzione"], correct: "Flessione" },
+                { question: "Quale tipo di articolazione è il polso?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale funzione hanno le suture craniche?", options: ["Stabilità", "Mobilità", "Flessibilità", "Rotazione"], correct: "Stabilità" },
+                { question: "Quale componente è interno alla capsula articolare?", options: ["Membrana sinoviale", "Membrana fibrosa", "Legamenti", "Cartilagine"], correct: "Membrana sinoviale" },
+                { question: "Quale movimento allarga le braccia?", options: ["Abduzione", "Adduzione", "Flessione", "Estensione"], correct: "Abduzione" },
+                { question: "Quale tipo di sinartrosi è temporanea?", options: ["Sincondrosi", "Suture", "Sinostosi", "Sindesmosi"], correct: "Sincondrosi" },
+                { question: "Quale articolazione è tra le vertebre?", options: ["Anfiartrosi", "Diartrosi", "Sinartrosi", "Capsula"], correct: "Anfiartrosi" },
+                { question: "Quale struttura è assente nelle sinartrosi?", options: ["Liquido sinoviale", "Tessuto fibroso", "Cartilagine", "Legamenti"], correct: "Liquido sinoviale" },
+                { question: "Quale movimento è tipico dell’anca?", options: ["Circonduzione", "Flessione limitata", "Stabilità", "Adduzione fissa"], correct: "Circonduzione" },
+                { question: "Quale tipo di articolazione è tra le ossa del tarso?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale funzione ha il liquido sinoviale?", options: ["Lubrifica", "Stabilizza", "Blocca", "Ricopre"], correct: "Lubrifica" },
+                { question: "Quale articolazione non ha capsula articolare?", options: ["Cranio", "Ginocchio", "Spalla", "Polso"], correct: "Cranio" },
+                { question: "Quale movimento riporta la gamba al corpo?", options: ["Adduzione", "Abduzione", "Flessione", "Estensione"], correct: "Adduzione" },
+                { question: "Quale tipo di sinartrosi è tra le ossa pubiche?", options: ["Sindesmosi", "Suture", "Sincondrosi", "Sinostosi"], correct: "Sindesmosi" },
+                { question: "Quale articolazione mobile è nel collo?", options: ["Atlante-asse", "Cranio", "Bacino", "Vertebre"], correct: "Atlante-asse" },
+                { question: "Quale elemento stabilizza le anfiartrosi?", options: ["Legamenti periferici", "Capsula articolare", "Liquido sinoviale", "Tessuto osseo"], correct: "Legamenti periferici" },
+                { question: "Quale movimento è escluso nel cranio?", options: ["Flessione", "Stabilità", "Ancoraggio", "Rigidità"], correct: "Flessione" },
+                { question: "Quale tipo di superficie è nelle diartrosi?", options: ["Concordante", "Dentata", "Ruvida", "Fissa"], correct: "Concordante" },
+                { question: "Quale articolazione è nel piede?", options: ["Caviglia", "Cranio", "Vertebre", "Bacino"], correct: "Caviglia" },
+                { question: "Quale funzione hanno le diartrosi?", options: ["Mobilità", "Stabilità", "Rigidità", "Ancoraggio"], correct: "Mobilità" },
+                { question: "Quale tipo di sinartrosi è ossea?", options: ["Sinostosi", "Suture", "Sincondrosi", "Sindesmosi"], correct: "Sinostosi" },
+                { question: "Quale movimento è tipico del braccio?", options: ["Estensione", "Stabilità", "Circonduzione limitata", "Adduzione fissa"], correct: "Estensione" },
+                { question: "Quale struttura è tipica delle suture?", options: ["Tessuto fibroso", "Cartilagine", "Liquido sinoviale", "Muscoli"], correct: "Tessuto fibroso" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale articolazione è definita anfiartrosi?", options: ["Semimobile", "Mobile", "Fissa", "Rotatoria"], correct: "Semimobile" },
+                { question: "Quale struttura è presente nelle diartrosi?", options: ["Liquido sinoviale", "Tessuto fibroso", "Legamenti interossei", "Sinostosi"], correct: "Liquido sinoviale" },
+                { question: "Quale movimento è tipico della colonna vertebrale?", options: ["Flessione limitata", "Circonduzione completa", "Stabilità", "Abduzione"], correct: "Flessione limitata" },
+                { question: "Quale articolazione mobile è nella mano?", options: ["Polso", "Cranio", "Bacino", "Vertebre"], correct: "Polso" },
+                { question: "Quale tipo di sinartrosi è tra le ossa iliache?", options: ["Sinostosi", "Suture", "Sincondrosi", "Sindesmosi"], correct: "Sinostosi" },
+                { question: "Quale elemento facilita il movimento nelle diartrosi?", options: ["Cartilagine", "Tessuto fibroso", "Legamenti", "Ossa"], correct: "Cartilagine" },
+                { question: "Quale articolazione semimobile è tra le vertebre?", options: ["Intervertebrale", "Ginocchio", "Spalla", "Cranio"], correct: "Intervertebrale" },
+                { question: "Quale movimento è escluso nel bacino?", options: ["Flessione", "Stabilità", "Ancoraggio", "Rigidità"], correct: "Flessione" },
+                { question: "Quale tipo di articolazione è il gomito?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale funzione hanno le sinartrosi?", options: ["Stabilità", "Mobilità", "Flessibilità", "Rotazione"], correct: "Stabilità" },
+                { question: "Quale componente è esterno alla capsula articolare?", options: ["Membrana fibrosa", "Membrana sinoviale", "Legamenti", "Cartilagine"], correct: "Membrana fibrosa" },
+                { question: "Quale movimento allontana il braccio dal corpo?", options: ["Abduzione", "Adduzione", "Flessione", "Estensione"], correct: "Abduzione" },
+                { question: "Quale tipo di sinartrosi è tra le coste?", options: ["Sincondrosi", "Suture", "Sinostosi", "Sindesmosi"], correct: "Sincondrosi" },
+                { question: "Quale articolazione è tra le ossa del cranio?", options: ["Sinartrosi", "Diartrosi", "Anfiartrosi", "Capsula"], correct: "Sinartrosi" },
+                { question: "Quale struttura è assente nelle anfiartrosi?", options: ["Capsula articolare", "Tessuto fibroso", "Cartilagine", "Legamenti"], correct: "Capsula articolare" },
+                { question: "Quale movimento è tipico della spalla?", options: ["Circonduzione", "Flessione limitata", "Stabilità", "Adduzione fissa"], correct: "Circonduzione" },
+                { question: "Quale tipo di articolazione è tra le falangi?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale funzione ha la membrana sinoviale?", options: ["Lubrifica", "Stabilizza", "Blocca", "Ricopre"], correct: "Lubrifica" },
+                { question: "Quale articolazione non ha liquido sinoviale?", options: ["Cranio", "Ginocchio", "Spalla", "Polso"], correct: "Cranio" },
+                { question: "Quale movimento riporta il braccio al corpo?", options: ["Adduzione", "Abduzione", "Flessione", "Estensione"], correct: "Adduzione" },
+                { question: "Quale tipo di sinartrosi è tra le ossa del sacro?", options: ["Sinostosi", "Suture", "Sincondrosi", "Sindesmosi"], correct: "Sinostosi" },
+                { question: "Quale articolazione mobile è nel piede?", options: ["Caviglia", "Cranio", "Bacino", "Vertebre"], correct: "Caviglia" },
+                { question: "Quale elemento stabilizza le diartrosi?", options: ["Legamenti", "Tessuto fibroso", "Cartilagine", "Ossa"], correct: "Legamenti" },
+                { question: "Quale movimento è tipico del polso?", options: ["Estensione", "Stabilità", "Circonduzione limitata", "Adduzione fissa"], correct: "Estensione" },
+                { question: "Quale tipo di superficie è nelle anfiartrosi?", options: ["Cartilaginea", "Dentata", "Sferica", "Fissa"], correct: "Cartilaginea" },
+                { question: "Quale articolazione è nel collo?", options: ["Atlante-asse", "Cranio", "Vertebre", "Bacino"], correct: "Atlante-asse" },
+                { question: "Quale funzione hanno le anfiartrosi?", options: ["Mobilità limitata", "Stabilità", "Rigidità", "Rotazione"], correct: "Mobilità limitata" },
+                { question: "Quale tipo di sinartrosi è tra le ossa craniche?", options: ["Suture", "Sincondrosi", "Sinostosi", "Sindesmosi"], correct: "Suture" },
+                { question: "Quale movimento è tipico della gamba?", options: ["Flessione", "Stabilità", "Circonduzione completa", "Adduzione"], correct: "Flessione" },
+                { question: "Quale struttura è tipica delle sinartrosi?", options: ["Tessuto fibroso", "Capsula articolare", "Liquido sinoviale", "Muscoli"], correct: "Tessuto fibroso" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale articolazione è definita diartrosi?", options: ["Mobile", "Semimobile", "Fissa", "Rotatoria"], correct: "Mobile" },
+                { question: "Quale struttura è assente nelle sinartrosi?", options: ["Capsula articolare", "Tessuto fibroso", "Legamenti", "Cartilagine"], correct: "Capsula articolare" },
+                { question: "Quale movimento è tipico del gomito?", options: ["Estensione", "Circonduzione completa", "Stabilità", "Adduzione"], correct: "Estensione" },
+                { question: "Quale articolazione semimobile è nel torso?", options: ["Colonna vertebrale", "Spalla", "Cranio", "Anca"], correct: "Colonna vertebrale" },
+                { question: "Quale tipo di sinartrosi è tra le ossa del cranio?", options: ["Suture", "Sincondrosi", "Sinostosi", "Sindesmosi"], correct: "Suture" },
+                { question: "Quale elemento lubrifica le articolazioni mobili?", options: ["Liquido sinoviale", "Tessuto fibroso", "Legamenti", "Ossa"], correct: "Liquido sinoviale" },
+                { question: "Quale articolazione mobile è nella gamba?", options: ["Ginocchio", "Cranio", "Bacino", "Vertebre"], correct: "Ginocchio" },
+                { question: "Quale movimento è escluso nelle diartrosi?", options: ["Stabilità fissa", "Flessione", "Circonduzione", "Abduzione"], correct: "Stabilità fissa" },
+                { question: "Quale tipo di articolazione è l’anca?", options: ["Diartrosi", "Anfiartrosi", "Sinartrosi", "Suture"], correct: "Diartrosi" },
+                { question: "Quale funzione hanno le anfiartrosi?", options: ["Mobilità limitata", "Stabilità", "Flessibilità", "Rotazione"], correct: "Mobilità limitata" },
+                { question: "Quale componente è interno alla capsula articolare?", options: ["Membrana sinoviale", "Membrana fibrosa", "Legamenti", "Cartilagine"], correct: "Membrana sinoviale" },
+                { question: "Quale movimento allontana la gamba dal corpo?", options: ["Abduzione", "Adduzione", "Flessione", "Estensione"], correct: "Abduzione" },
+                { question: "Quale tipo di sinartrosi è tra le coste e lo sterno?", options: ["Sincondrosi", "Suture", "Sinostosi", "Sindesmosi"], correct: "Sincondrosi" },
+                { question: "Quale articolazione è tra le ossa del bacino?", options: ["Sinartrosi", "Diartrosi", "Anfiartrosi", "Capsula"], correct: "Sinartrosi" },
+                { question: "Quale struttura è presente nelle anfiartrosi?", options: ["Legamenti", "Capsula articolare", "Liquido sinoviale", "Sinostosi"], correct: "Legamenti" },
+                { question: "Quale movimento è tipico del polso?", options: ["Circonduzione", "Flessione limitata", "Stabilità", "Adduzione fissa"], correct: "Circonduzione" },
+                { question: "Quale tipo di articolazione è tra le vertebre?", options: ["Anfiartrosi", "Diartrosi", "Sinartrosi", "Suture"], correct: "Anfiartrosi" },
+                { question: "Quale funzione ha la cartilagine?", options: ["Riduce attrito", "Stabilizza", "Blocca", "Ricopre"], correct: "Riduce attrito" },
+                { question: "Quale articolazione non ha movimento?", options: ["Cranio", "Ginocchio", "Spalla", "Polso"], correct: "Cranio" },
+                { question: "Quale movimento riporta la gamba al corpo?", options: ["Adduzione", "Abduzione", "Flessione", "Estensione"], correct: "Adduzione" },
+                { question: "Quale tipo di sinartrosi è tra le ossa iliache?", options: ["Sinostosi", "Suture", "Sincondrosi", "Sindesmosi"], correct: "Sinostosi" },
+                { question: "Quale articolazione mobile è nel braccio?", options: ["Spalla", "Cranio", "Bacino", "Vertebre"], correct: "Spalla" },
+                { question: "Quale elemento stabilizza le sinartrosi?", options: ["Tessuto fibroso", "Capsula articolare", "Liquido sinoviale", "Muscoli"], correct: "Tessuto fibroso" },
+                { question: "Quale movimento è tipico della caviglia?", options: ["Flessione", "Stabilità", "Circonduzione completa", "Adduzione"], correct: "Flessione" },
+                { question: "Quale tipo di superficie è nelle diartrosi?", options: ["Sferica", "Dentata", "Ruvida", "Fissa"], correct: "Sferica" },
+                { question: "Quale articolazione è nel piede?", options: ["Caviglia", "Cranio", "Vertebre", "Bacino"], correct: "Caviglia" },
+                { question: "Quale funzione hanno le diartrosi?", options: ["Mobilità", "Stabilità", "Rigidità", "Ancoraggio"], correct: "Mobilità" },
+                { question: "Quale tipo di sinartrosi è tra le ossa pubiche?", options: ["Sindesmosi", "Suture", "Sincondrosi", "Sinostosi"], correct: "Sindesmosi" },
+                { question: "Quale movimento è tipico del collo?", options: ["Circonduzione", "Stabilità", "Flessione limitata", "Adduzione"], correct: "Circonduzione" },
+                { question: "Quale struttura è tipica delle anfiartrosi?", options: ["Legamenti interossei", "Capsula articolare", "Liquido sinoviale", "Muscoli"], correct: "Legamenti interossei" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>

@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sito sul sistema riproduttivo maschile e femminile per l'Operatore Socio-Sanitario (OSS): scopri gli organi e quiz interattivi.">
+    <meta name="keywords" content="sistema riproduttivo, OSS, pene, prostata, testicoli, ovaio, utero, vagina, quiz sistema riproduttivo">
+    <title>IApparato Riproduttivo</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0d1b2a, #1b263b);
+            color: #e0e0e0;
+            overflow-x: hidden;
+            position: relative;
+            font-size: 18px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/circuit-pattern.png');
+            opacity: 0.05;
+            z-index: -1;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+        }
+        header {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            margin: 0;
+            font-size: 3.5em;
+            color: #00d4ff;
+            text-shadow: 0 0 10px #00d4ff;
+            animation: glow 2s infinite alternate;
+        }
+        header p {
+            margin: 10px 0 0;
+            font-size: 1.2em;
+            color: #ecf0f1;
+        }
+        nav {
+            background: #34495e;
+            padding: 10px 0;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 0 20px;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+        nav a:hover {
+            color: #3498db;
+        }
+        section {
+            background: rgba(20, 40, 60, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            margin-bottom: 50px;
+            animation: fadeIn 1.5s ease-in;
+            border: 1px solid #00d4ff;
+        }
+        section h2 {
+            color: #00d4ff;
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: 0 0 5px #00d4ff;
+        }
+        section h3 {
+            color: #00d4ff;
+            font-size: 1.5em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        section p, section ul {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        section ul {
+            list-style-type: disc;
+            padding-left: 40px;
+        }
+        section ul ul {
+            list-style-type: circle;
+            padding-left: 30px;
+        }
+        .quiz-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+        .quiz-selector {
+            margin-bottom: 20px;
+        }
+        .quiz-selector select {
+            padding: 10px;
+            font-size: 1.2em;
+            background: rgba(30, 50, 70, 0.95);
+            color: #e0e0e0;
+            border: 1px solid #00d4ff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .quiz-timer {
+            font-size: 1.5em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+        }
+        .quiz-balls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quiz-ball {
+            width: 40px;
+            height: 40px;
+            background: rgba(30, 50, 70, 0.95);
+            border: 2px solid #00d4ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #e0e0e0;
+            transition: background 0.3s ease;
+        }
+        .quiz-ball.correct {
+            background: #00ff00;
+            color: #000;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .quiz-ball.incorrect {
+            background: #ff0000;
+            color: #000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        .quiz-question {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        .quiz-options {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .quiz-option {
+            background: rgba(30, 50, 70, 0.95);
+            padding: 15px 30px;
+            border-radius: 10px;
+            border: 1px solid #00d4ff;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-size: 1.1em;
+        }
+        .quiz-option:hover {
+            background: rgba(0, 212, 255, 0.3);
+        }
+        .quiz-feedback {
+            margin-top: 20px;
+            font-size: 1.2em;
+            display: none;
+        }
+        .correct {
+            color: #00ff00;
+        }
+        .incorrect {
+            color: #ff0000;
+        }
+        .quiz-result {
+            margin-top: 20px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        .retry-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: #00d4ff;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .retry-button:hover {
+            background: #3498db;
+        }
+        footer {
+            background: #2c3e50;
+            color: #ecf0f1;
+            text-align: center;
+            padding: 20px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+        footer p {
+            margin: 0;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #00d4ff, 0 0 10px #00d4ff; }
+            to { text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; }
+        }
+        @media (max-width: 768px) {
+            nav a {
+                display: block;
+                margin: 10px 0;
+            }
+            section {
+                padding: 20px;
+            }
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .quiz-options {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .quiz-ball {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8em;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Apparato Riproduttivo</h1>
+        <p>Struttura e Funzioni per l'OSS</p>
+    </header>
+
+    <nav>
+        <a href="#introduzione">Introduzione</a>
+        <a href="#riproduttivo-maschile">Apparato Maschile</a>
+        <a href="#riproduttivo-femminile">Apparato Femminile</a>
+        <a href="#quiz">Quiz</a>
+    </nav>
+
+    <div class="container">
+        <section id="introduzione">
+            <h2>Introduzione al Sistema Riproduttivo</h2>
+            <p>Consente all'uomo e alla donna di riprodursi. Molto diverso nel genere maschile e in quello femminile, risulta formato nel primo caso dal pene, dalla prostata, dai testicoli, dalle vescicole seminali e dalle vie spermatiche, mentre nel secondo caso è formato dall'ovaio, dalle salpingi, dall'utero, dalla vagina e dalla vulva.</p>
+        </section>
+
+        <section id="riproduttivo-maschile">
+            <h2>Apparato Riproduttivo Maschile</h2>
+            <p>Consente all’uomo di riprodursi. È formato dal pene, dalla prostata, dai testicoli, dalle vescicole seminali e dalle vie spermatiche.</p>
+
+            <h3>Il Pene</h3>
+            <p>Il pene rappresenta l’organo riproduttivo maschile e l’ultimo tratto delle vie urinarie. È composto da tre corpi a forma cilindrica – due corpi cavernosi laterali e un corpo spugnoso centrale – ricoperti all’estremità dal glande. All’apice del glande si apre il meato uretrale, ovvero l’orifizio dell’uretra che consente il passaggio verso l’esterno dello sperma e dell’urina. Il glande è in genere parzialmente coperto da una piega che viene formata dalla cute del pene, il prepuzio.</p>
+
+            <h3>La Prostata</h3>
+            <p>La prostata, o ghiandola prostatica, è una ghiandola formata da tessuto fibroso e muscolare il cui compito principale è quello di produrre e immagazzinare il liquido seminale che viene poi rilasciato durante l’eiaculazione. È situata sotto la vescica e davanti al retto, dal quale dista pochi centimetri. Nel bambino è presente in dimensioni ridotte, per poi svilupparsi durante la pubertà.</p>
+
+            <h3>I Testicoli</h3>
+            <p>I testicoli rappresentano le ghiandole sessuali maschili per eccellenza. Nel feto sono collocati nell’addome e solitamente discendono nello scroto (ovvero il sacchetto che li contiene) poco prima della nascita. Queste due ghiandole non sono sempre della stessa grandezza nel corso della vita: di piccole dimensioni durante l’infanzia, aumentano di volume durante la pubertà fino al raggiungimento della piena maturità sessuale, per poi subire un’involuzione fisiologica nella tarda età.</p>
+
+            <h3>Le Vescicole Seminali</h3>
+            <p>Le vescicole seminali sono due ghiandole presenti esclusivamente nell’organismo maschile. Sono situate, una per lato, al di sopra della prostata. Il loro compito è quello di secernere una sostanza vischiosa che, insieme agli spermatozoi prodotti dai testicoli e alle secrezioni della ghiandola prostatica e delle ghiandole bulbouretrali, va a formare lo sperma.</p>
+
+            <h3>Le Vie Spermatiche</h3>
+            <p>Le funzioni principali delle vie spermatiche sono due: consentire e facilitare il transito degli spermatozoi provenienti dai testicoli verso l’esterno dell’organismo; permettere e favorire la maturazione degli spermatozoi stessi.</p>
+
+            <p><strong>A cosa serve l’apparato riproduttivo maschile?</strong> La funzione dell’apparato riproduttivo maschile è quella di consentire, mediante la collaborazione di tutti gli organi che lo compongono, la produzione degli spermatozoi (gameti maschili) indispensabili affinché si realizzi la riproduzione umana.</p>
+        </section>
+
+        <section id="riproduttivo-femminile">
+            <h2>Apparato Riproduttivo Femminile</h2>
+            <p>Consente alla donna di riprodursi. È formato dall’ovaio, dalle salpingi, dall’utero, dalla vagina e dalla vulva.</p>
+
+            <h3>L’Ovaio</h3>
+            <p>L’ovaio è formato da due ghiandole a forma di mandorla, le ovaie, posizionate ciascuna a uno dei due lati dell’utero. Le ovaie svolgono un duplice ruolo: oltre a produrre gli ovuli, elementi indispensabili per la riproduzione (funzione gametogenica), secernono anche gli ormoni sessuali (estrogeni, progesterone e una piccola quantità di androgeni) che regolano tutte le fasi della vita riproduttiva femminile (funzione endocrina).</p>
+
+            <h3>Le Salpingi</h3>
+            <p>Le salpingi (tube uterine, tube di Falloppio, trombe di Falloppio o ovidutti) sono due condotti simmetrici che mettono in comunicazione ciascuna delle due ovaie (predisposte alla produzione degli ovociti da fecondare) all’utero (organo nel quale avviene l’eventuale impianto e maturazione dell’ovulo fecondato). Rappresentano la normale sede di fecondazione, ovvero il luogo in cui avviene l’incontro tra l’ovulo (gamete femminile) e lo spermatozoo (gamete maschile).</p>
+
+            <h3>L’Utero</h3>
+            <p>L’utero è un organo muscolare cavo deputato ad accogliere l’ovulo fecondato, a consentirne lo sviluppo e a espellere il feto quando la gravidanza giunge al termine.</p>
+
+            <h3>La Vagina</h3>
+            <p>La vagina è un condotto formato da muscoli e membrane che mette in comunicazione l’ultima parte del collo dell’utero con l’ambiente esterno. Rappresenta l’ultimo tratto delle vie genitali femminili. La vagina è per eccellenza l’organo dell’accoppiamento: la sua funzione principale è quella di ricevere lo sperma al momento dell’atto sessuale. Serve inoltre a consentire, al momento del parto, l’espulsione di feto e placenta, e a permettere il passaggio del flusso mestruale e di tutti i prodotti della secrezione uterina.</p>
+
+            <h3>La Vulva</h3>
+            <p>La vulva è invece l’insieme degli organi genitali esterni femminili. È costituita dalle grandi e dalle piccole labbra, dal clitoride, dal vestibolo vulvare, dall’orifizio uretrale e dall’orifizio vaginale ed è posizionata sotto il monte di Venere (l’area cutanea al di sopra della sinfisi pubica).</p>
+
+            <p><strong>A cosa serve l’apparato riproduttivo femminile?</strong> La funzione dell’apparato riproduttivo femminile è quella di consentire, mediante la collaborazione di tutti gli organi che lo compongono, la produzione (prima) e la fecondazione (poi) dell’ovulo affinché si instauri una gravidanza e si dia vita, quindi, alla riproduzione del genere umano.</p>
+        </section>
+
+        <section id="quiz">
+            <h2>Quiz: Testa le Tue Conoscenze sul Sistema Riproduttivo</h2>
+            <p>Seleziona un quiz e rispondi alle 30 domande entro 30 minuti. Le palline si illumineranno man mano che procedi!</p>
+            <div class="quiz-container">
+                <div class="quiz-selector">
+                    <select id="quiz-select" onchange="selectQuiz()">
+                        <option value="0">Seleziona un Quiz</option>
+                        <option value="1">Quiz 1</option>
+                        <option value="2">Quiz 2</option>
+                        <option value="3">Quiz 3</option>
+                        <option value="4">Quiz 4</option>
+                        <option value="5">Quiz 5</option>
+                    </select>
+                </div>
+                <div class="quiz-timer" id="quiz-timer" style="display: none;">Tempo rimanente: 30:00</div>
+                <div class="quiz-balls" id="quiz-balls" style="display: none;"></div>
+                <div class="quiz-question" id="quiz-question"></div>
+                <div class="quiz-options" id="quiz-options"></div>
+                <div class="quiz-feedback" id="quiz-feedback"></div>
+                <div class="quiz-result" id="quiz-result"></div>
+                <button class="retry-button" id="retry-button" style="display: none;">Riprova</button>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2025 Il Sistema Riproduttivo - Tutti i diritti riservati</p>
+    </footer>
+
+    <script>
+        const allQuestions = [
+            // Quiz 1
+            [
+                { question: "Quali organi compongono l’apparato riproduttivo maschile?", options: ["Pene, prostata, testicoli, vescicole seminali, vie spermatiche", "Ovaio, salpingi, utero", "Pene, vagina, prostata", "Testicoli, vulva, utero"], correct: "Pene, prostata, testicoli, vescicole seminali, vie spermatiche" },
+                { question: "Qual è la funzione principale del pene?", options: ["Riproduzione e passaggio urina", "Produzione ormoni", "Secrezione liquido seminale", "Maturazione spermatozoi"], correct: "Riproduzione e passaggio urina" },
+                { question: "Quanti corpi cilindrici ha il pene?", options: ["Tre", "Due", "Uno", "Quattro"], correct: "Tre" },
+                { question: "Dove si trova il meato uretrale?", options: ["Apice del glande", "Base del pene", "Corpo cavernoso", "Prepuzio"], correct: "Apice del glande" },
+                { question: "Cosa copre il glande?", options: ["Prepuzio", "Corpo spugnoso", "Prostata", "Vescicola seminale"], correct: "Prepuzio" },
+                { question: "Quale organo produce il liquido seminale?", options: ["Prostata", "Testicoli", "Vescicole seminali", "Vie spermatiche"], correct: "Prostata" },
+                { question: "Dove è situata la prostata?", options: ["Sotto la vescica", "Sopra i testicoli", "Nel pene", "Dietro l’utero"], correct: "Sotto la vescica" },
+                { question: "Quando si sviluppa la prostata?", options: ["Pubertà", "Infanzia", "Nascita", "Vecchiaia"], correct: "Pubertà" },
+                { question: "Dove si trovano i testicoli nel feto?", options: ["Addome", "Scroto", "Pene", "Prostata"], correct: "Addome" },
+                { question: "Quale struttura contiene i testicoli?", options: ["Scroto", "Pene", "Vescicola seminale", "Prostata"], correct: "Scroto" },
+                { question: "Dove sono le vescicole seminali?", options: ["Sopra la prostata", "Sotto la vescica", "Nel pene", "Nei testicoli"], correct: "Sopra la prostata" },
+                { question: "Cosa secernono le vescicole seminali?", options: ["Sostanza vischiosa", "Spermatozoi", "Ormoni", "Urina"], correct: "Sostanza vischiosa" },
+                { question: "Quale funzione hanno le vie spermatiche?", options: ["Transito e maturazione spermatozoi", "Produzione liquido seminale", "Secrezione ormoni", "Passaggio urina"], correct: "Transito e maturazione spermatozoi" },
+                { question: "Qual è lo scopo dell’apparato maschile?", options: ["Produzione spermatozoi", "Produzione ovuli", "Fecondazione ovulo", "Espulsione feto"], correct: "Produzione spermatozoi" },
+                { question: "Quali organi formano l’apparato femminile?", options: ["Ovaio, salpingi, utero, vagina, vulva", "Pene, prostata, testicoli", "Vagina, testicoli, utero", "Ovaio, pene, vulva"], correct: "Ovaio, salpingi, utero, vagina, vulva" },
+                { question: "Che forma hanno le ovaie?", options: ["Mandorla", "Sfera", "Cilindro", "Cubo"], correct: "Mandorla" },
+                { question: "Quali ormoni secernono le ovaie?", options: ["Estrogeni e progesterone", "Testosterone", "Adrenalina", "Insulina"], correct: "Estrogeni e progesterone" },
+                { question: "Cosa collegano le salpingi?", options: ["Ovaie e utero", "Utero e vagina", "Vagina e vulva", "Ovaie e vulva"], correct: "Ovaie e utero" },
+                { question: "Dove avviene la fecondazione?", options: ["Salpingi", "Utero", "Vagina", "Ovaie"], correct: "Salpingi" },
+                { question: "Quale organo accoglie l’ovulo fecondato?", options: ["Utero", "Salpingi", "Vagina", "Vulva"], correct: "Utero" },
+                { question: "Qual è la funzione principale della vagina?", options: ["Ricevere sperma", "Produzione ovuli", "Secrezione ormoni", "Espulsione urina"], correct: "Ricevere sperma" },
+                { question: "Cosa espelle la vagina al parto?", options: ["Feto e placenta", "Ovulo", "Sperma", "Urina"], correct: "Feto e placenta" },
+                { question: "Quale organo fa parte della vulva?", options: ["Clitoride", "Utero", "Salpingi", "Prostata"], correct: "Clitoride" },
+                { question: "Dove si trova la vulva?", options: ["Sotto il monte di Venere", "Sopra l’utero", "Dentro la vagina", "Nei testicoli"], correct: "Sotto il monte di Venere" },
+                { question: "Qual è lo scopo dell’apparato femminile?", options: ["Produzione e fecondazione ovulo", "Produzione spermatozoi", "Secrezione liquido seminale", "Passaggio urina"], correct: "Produzione e fecondazione ovulo" },
+                { question: "Quale organo maschile è anche urinario?", options: ["Pene", "Prostata", "Testicoli", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quando aumentano di volume i testicoli?", options: ["Pubertà", "Infanzia", "Nascita", "Vecchiaia"], correct: "Pubertà" },
+                { question: "Quale organo regola la vita riproduttiva femminile?", options: ["Ovaie", "Utero", "Vagina", "Vulva"], correct: "Ovaie" },
+                { question: "Quale parte del pene è centrale?", options: ["Corpo spugnoso", "Corpi cavernosi", "Glande", "Prepuzio"], correct: "Corpo spugnoso" },
+                { question: "Quale organo espelle il feto?", options: ["Utero", "Vagina", "Salpingi", "Ovaie"], correct: "Utero" }
+            ],
+            // Quiz 2
+            [
+                { question: "Quale organo contiene il glande?", options: ["Pene", "Prostata", "Testicoli", "Vie spermatiche"], correct: "Pene" },
+                { question: "Cosa forma il liquido seminale nella prostata?", options: ["Tessuto fibroso e muscolare", "Spermatozoi", "Ormoni", "Urina"], correct: "Tessuto fibroso e muscolare" },
+                { question: "Dove discendono i testicoli prima della nascita?", options: ["Scroto", "Addome", "Pene", "Prostata"], correct: "Scroto" },
+                { question: "Quale ghiandola si trova sopra la prostata?", options: ["Vescicole seminali", "Testicoli", "Pene", "Vie spermatiche"], correct: "Vescicole seminali" },
+                { question: "Cosa contribuisce allo sperma?", options: ["Vescicole seminali", "Urina", "Sangue", "Ormoni"], correct: "Vescicole seminali" },
+                { question: "Quale struttura facilita il transito degli spermatozoi?", options: ["Vie spermatiche", "Pene", "Prostata", "Testicoli"], correct: "Vie spermatiche" },
+                { question: "Quale organo produce spermatozoi?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" },
+                { question: "Dove si trova il prepuzio?", options: ["Sul glande", "Nella prostata", "Sui testicoli", "Nelle vie spermatiche"], correct: "Sul glande" },
+                { question: "Quale organo è sotto la vescica?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quando i testicoli subiscono involuzione?", options: ["Tarda età", "Pubertà", "Infanzia", "Nascita"], correct: "Tarda età" },
+                { question: "Quale organo produce gli ovuli?", options: ["Ovaie", "Salpingi", "Utero", "Vagina"], correct: "Ovaie" },
+                { question: "Quali condotti sono simmetrici?", options: ["Salpingi", "Ovaie", "Vagina", "Vulva"], correct: "Salpingi" },
+                { question: "Quale organo è muscolare e cavo?", options: ["Utero", "Vagina", "Salpingi", "Vulva"], correct: "Utero" },
+                { question: "Quale organo riceve lo sperma?", options: ["Vagina", "Utero", "Salpingi", "Ovaie"], correct: "Vagina" },
+                { question: "Quale parte della vulva è esterna?", options: ["Grandi labbra", "Utero", "Salpingi", "Vagina"], correct: "Grandi labbra" },
+                { question: "Quale funzione hanno le ovaie oltre agli ovuli?", options: ["Secrezione ormoni", "Fecondazione", "Espulsione feto", "Passaggio sperma"], correct: "Secrezione ormoni" },
+                { question: "Dove si incontrano ovulo e spermatozoo?", options: ["Salpingi", "Utero", "Vagina", "Ovaie"], correct: "Salpingi" },
+                { question: "Quale organo espelle il flusso mestruale?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva include il clitoride?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Dove si trova il monte di Venere?", options: ["Sopra la vulva", "Sotto l’utero", "Nelle salpingi", "Nella vagina"], correct: "Sopra la vulva" },
+                { question: "Quale organo rilascia il liquido seminale?", options: ["Prostata", "Testicoli", "Vescicole seminali", "Pene"], correct: "Prostata" },
+                { question: "Quali corpi del pene sono laterali?", options: ["Cavernosi", "Spugnoso", "Glande", "Prepuzio"], correct: "Cavernosi" },
+                { question: "Quale ghiandola è esclusiva del maschio?", options: ["Vescicole seminali", "Testicoli", "Pene", "Prostata"], correct: "Vescicole seminali" },
+                { question: "Quale organo è sede della gravidanza?", options: ["Utero", "Vagina", "Salpingi", "Ovaie"], correct: "Utero" },
+                { question: "Quale funzione hanno le vie spermatiche oltre al transito?", options: ["Maturazione spermatozoi", "Produzione ormoni", "Secrezione liquido", "Espulsione urina"], correct: "Maturazione spermatozoi" },
+                { question: "Quale organo femminile è sotto il peritoneo?", options: ["Ovaie", "Vagina", "Utero", "Vulva"], correct: "Ovaie" },
+                { question: "Quale parte del pene è centrale?", options: ["Corpo spugnoso", "Corpi cavernosi", "Glande", "Prepuzio"], correct: "Corpo spugnoso" },
+                { question: "Quale organo è davanti al retto?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quale ormone regola la vita femminile?", options: ["Estrogeni", "Testosterone", "Adrenalina", "Insulina"], correct: "Estrogeni" },
+                { question: "Quale organo femminile è un condotto?", options: ["Vagina", "Utero", "Ovaie", "Vulva"], correct: "Vagina" }
+            ],
+            // Quiz 3
+            [
+                { question: "Quale organo ha il meato uretrale?", options: ["Pene", "Prostata", "Testicoli", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quale ghiandola immagazzina liquido seminale?", options: ["Prostata", "Testicoli", "Vescicole seminali", "Vie spermatiche"], correct: "Prostata" },
+                { question: "Dove si trovano i testicoli dopo la nascita?", options: ["Scroto", "Addome", "Pene", "Prostata"], correct: "Scroto" },
+                { question: "Quale organo è sopra la prostata?", options: ["Vescicole seminali", "Pene", "Testicoli", "Vie spermatiche"], correct: "Vescicole seminali" },
+                { question: "Cosa forma lo sperma con i testicoli?", options: ["Vescicole seminali", "Urina", "Sangue", "Ormoni"], correct: "Vescicole seminali" },
+                { question: "Quale struttura matura gli spermatozoi?", options: ["Vie spermatiche", "Pene", "Prostata", "Testicoli"], correct: "Vie spermatiche" },
+                { question: "Quale organo è ghiandola sessuale maschile?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" },
+                { question: "Quale parte del pene è all’estremità?", options: ["Glande", "Prepuzio", "Corpo cavernoso", "Corpo spugnoso"], correct: "Glande" },
+                { question: "Quale organo è piccolo nell’infanzia?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quando i testicoli maturano?", options: ["Pubertà", "Infanzia", "Nascita", "Tarda età"], correct: "Pubertà" },
+                { question: "Quale organo ha funzione endocrina?", options: ["Ovaie", "Salpingi", "Utero", "Vagina"], correct: "Ovaie" },
+                { question: "Quale condotto collega ovaie e utero?", options: ["Salpingi", "Vagina", "Vulva", "Utero"], correct: "Salpingi" },
+                { question: "Quale organo sviluppa il feto?", options: ["Utero", "Vagina", "Salpingi", "Ovaie"], correct: "Utero" },
+                { question: "Quale organo è l’ultimo tratto genitale femminile?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva è il vestibolo?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Quale funzione hanno le ovaie oltre agli ormoni?", options: ["Produzione ovuli", "Fecondazione", "Espulsione feto", "Passaggio sperma"], correct: "Produzione ovuli" },
+                { question: "Dove avviene l’incontro dei gameti?", options: ["Salpingi", "Utero", "Vagina", "Ovaie"], correct: "Salpingi" },
+                { question: "Quale organo permette il passaggio mestruale?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva ha le piccole labbra?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Quale area è sopra la vulva?", options: ["Monte di Venere", "Utero", "Salpingi", "Vagina"], correct: "Monte di Venere" },
+                { question: "Quale organo è anche parte delle vie urinarie?", options: ["Pene", "Testicoli", "Prostata", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quale parte del pene è cilindrica?", options: ["Corpi cavernosi", "Glande", "Prepuzio", "Prostata"], correct: "Corpi cavernosi" },
+                { question: "Quale organo produce gameti maschili?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" },
+                { question: "Quale organo femminile è cavo?", options: ["Utero", "Vagina", "Ovaie", "Vulva"], correct: "Utero" },
+                { question: "Quale funzione hanno le salpingi?", options: ["Sede fecondazione", "Produzione ovuli", "Espulsione feto", "Secrezione ormoni"], correct: "Sede fecondazione" },
+                { question: "Quale organo maschile è davanti al retto?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quale ormone è secreto dalle ovaie?", options: ["Progesterone", "Testosterone", "Adrenalina", "Insulina"], correct: "Progesterone" },
+                { question: "Quale organo femminile è esterno?", options: ["Vulva", "Utero", "Salpingi", "Ovaie"], correct: "Vulva" },
+                { question: "Quale parte del pene è coperta dal prepuzio?", options: ["Glande", "Corpo spugnoso", "Corpi cavernosi", "Vie spermatiche"], correct: "Glande" },
+                { question: "Quale organo maschile matura nella tarda età?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" }
+            ],
+            // Quiz 4
+            [
+                { question: "Quale organo ha corpi cavernosi?", options: ["Pene", "Prostata", "Testicoli", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quale ghiandola rilascia liquido durante l’eiaculazione?", options: ["Prostata", "Testicoli", "Vescicole seminali", "Vie spermatiche"], correct: "Prostata" },
+                { question: "Dove si trovano i testicoli nel neonato?", options: ["Scroto", "Addome", "Pene", "Prostata"], correct: "Scroto" },
+                { question: "Quale organo è al di sopra della prostata?", options: ["Vescicole seminali", "Pene", "Testicoli", "Vie spermatiche"], correct: "Vescicole seminali" },
+                { question: "Cosa secernono le vescicole seminali?", options: ["Sostanza vischiosa", "Urina", "Sangue", "Ormoni"], correct: "Sostanza vischiosa" },
+                { question: "Quale struttura trasporta gli spermatozoi?", options: ["Vie spermatiche", "Pene", "Prostata", "Testicoli"], correct: "Vie spermatiche" },
+                { question: "Quale organo è la ghiandola sessuale principale?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" },
+                { question: "Quale parte del pene ha l’orifizio uretrale?", options: ["Glande", "Prepuzio", "Corpo cavernoso", "Corpo spugnoso"], correct: "Glande" },
+                { question: "Quale organo si sviluppa nella pubertà?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quando i testicoli diminuiscono di volume?", options: ["Tarda età", "Pubertà", "Infanzia", "Nascita"], correct: "Tarda età" },
+                { question: "Quale organo ha funzione gametogenica?", options: ["Ovaie", "Salpingi", "Utero", "Vagina"], correct: "Ovaie" },
+                { question: "Quale struttura è sede della fecondazione?", options: ["Salpingi", "Vagina", "Vulva", "Utero"], correct: "Salpingi" },
+                { question: "Quale organo ospita il feto?", options: ["Utero", "Vagina", "Salpingi", "Ovaie"], correct: "Utero" },
+                { question: "Quale organo è per l’accoppiamento?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva ha l’orifizio uretrale?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Quale funzione hanno le ovaie oltre alla gametogenesi?", options: ["Secrezione ormoni", "Fecondazione", "Espulsione feto", "Passaggio sperma"], correct: "Secrezione ormoni" },
+                { question: "Dove si uniscono ovulo e spermatozoo?", options: ["Salpingi", "Utero", "Vagina", "Ovaie"], correct: "Salpingi" },
+                { question: "Quale organo espelle la placenta?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva ha le grandi labbra?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Quale struttura è sopra la vulva?", options: ["Monte di Venere", "Utero", "Salpingi", "Vagina"], correct: "Monte di Venere" },
+                { question: "Quale organo è parte delle vie urinarie maschili?", options: ["Pene", "Testicoli", "Prostata", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quale parte del pene è laterale?", options: ["Corpi cavernosi", "Glande", "Prepuzio", "Corpo spugnoso"], correct: "Corpi cavernosi" },
+                { question: "Quale organo produce gameti maschili?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" },
+                { question: "Quale organo femminile è muscolare?", options: ["Utero", "Vagina", "Ovaie", "Vulva"], correct: "Utero" },
+                { question: "Quale funzione hanno le salpingi oltre al trasporto?", options: ["Sede fecondazione", "Produzione ovuli", "Espulsione feto", "Secrezione ormoni"], correct: "Sede fecondazione" },
+                { question: "Quale organo maschile è vicino al retto?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quale ormone è prodotto dalle ovaie?", options: ["Estrogeni", "Testosterone", "Adrenalina", "Insulina"], correct: "Estrogeni" },
+                { question: "Quale organo femminile è genitale esterno?", options: ["Vulva", "Utero", "Salpingi", "Ovaie"], correct: "Vulva" },
+                { question: "Quale parte del pene è ricoperta?", options: ["Glande", "Corpo spugnoso", "Corpi cavernosi", "Vie spermatiche"], correct: "Glande" },
+                { question: "Quale organo maschile si trova nell’addome nel feto?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" }
+            ],
+            // Quiz 5
+            [
+                { question: "Quale organo ha il corpo spugnoso?", options: ["Pene", "Prostata", "Testicoli", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quale ghiandola è sotto la vescica?", options: ["Prostata", "Testicoli", "Vescicole seminali", "Vie spermatiche"], correct: "Prostata" },
+                { question: "Dove si trovano i testicoli alla nascita?", options: ["Scroto", "Addome", "Pene", "Prostata"], correct: "Scroto" },
+                { question: "Quale organo è sopra la prostata?", options: ["Vescicole seminali", "Pene", "Testicoli", "Vie spermatiche"], correct: "Vescicole seminali" },
+                { question: "Cosa contribuisce alla formazione dello sperma?", options: ["Vescicole seminali", "Urina", "Sangue", "Ormoni"], correct: "Vescicole seminali" },
+                { question: "Quale struttura favorisce la maturazione degli spermatozoi?", options: ["Vie spermatiche", "Pene", "Prostata", "Testicoli"], correct: "Vie spermatiche" },
+                { question: "Quale organo produce i gameti maschili?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" },
+                { question: "Quale parte del pene è all’apice?", options: ["Glande", "Prepuzio", "Corpo cavernoso", "Corpo spugnoso"], correct: "Glande" },
+                { question: "Quale organo cresce nella pubertà?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quando i testicoli si riducono?", options: ["Tarda età", "Pubertà", "Infanzia", "Nascita"], correct: "Tarda età" },
+                { question: "Quale organo produce ormoni femminili?", options: ["Ovaie", "Salpingi", "Utero", "Vagina"], correct: "Ovaie" },
+                { question: "Quale struttura collega le ovaie all’utero?", options: ["Salpingi", "Vagina", "Vulva", "Utero"], correct: "Salpingi" },
+                { question: "Quale organo accoglie il feto?", options: ["Utero", "Vagina", "Salpingi", "Ovaie"], correct: "Utero" },
+                { question: "Quale organo riceve lo sperma?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva ha il clitoride?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Quale funzione hanno le ovaie?", options: ["Produzione ovuli", "Fecondazione", "Espulsione feto", "Passaggio sperma"], correct: "Produzione ovuli" },
+                { question: "Dove avviene la fecondazione nell’apparato femminile?", options: ["Salpingi", "Utero", "Vagina", "Ovaie"], correct: "Salpingi" },
+                { question: "Quale organo espelle il feto al parto?", options: ["Vagina", "Utero", "Salpingi", "Vulva"], correct: "Vagina" },
+                { question: "Quale parte della vulva ha l’orifizio vaginale?", options: ["Organi esterni", "Utero", "Salpingi", "Vagina"], correct: "Organi esterni" },
+                { question: "Quale struttura è sotto il monte di Venere?", options: ["Vulva", "Utero", "Salpingi", "Vagina"], correct: "Vulva" },
+                { question: "Quale organo maschile è urinario?", options: ["Pene", "Testicoli", "Prostata", "Vescicole seminali"], correct: "Pene" },
+                { question: "Quale parte del pene è coperta?", options: ["Glande", "Corpi cavernosi", "Corpo spugnoso", "Vie spermatiche"], correct: "Glande" },
+                { question: "Quale organo produce liquido vischioso?", options: ["Vescicole seminali", "Pene", "Prostata", "Testicoli"], correct: "Vescicole seminali" },
+                { question: "Quale organo femminile è cavo?", options: ["Utero", "Vagina", "Ovaie", "Vulva"], correct: "Utero" },
+                { question: "Quale funzione hanno le salpingi?", options: ["Sede fecondazione", "Produzione ovuli", "Espulsione feto", "Secrezione ormoni"], correct: "Sede fecondazione" },
+                { question: "Quale organo maschile è vicino al retto?", options: ["Prostata", "Pene", "Testicoli", "Vescicole seminali"], correct: "Prostata" },
+                { question: "Quale ormone regola la riproduzione femminile?", options: ["Progesterone", "Testosterone", "Adrenalina", "Insulina"], correct: "Progesterone" },
+                { question: "Quale organo femminile è esterno?", options: ["Vulva", "Utero", "Salpingi", "Ovaie"], correct: "Vulva" },
+                { question: "Quale parte del pene ha il prepuzio?", options: ["Glande", "Corpo spugnoso", "Corpi cavernosi", "Vie spermatiche"], correct: "Glande" },
+                { question: "Quale organo maschile è nell’addome prima della nascita?", options: ["Testicoli", "Pene", "Prostata", "Vescicole seminali"], correct: "Testicoli" }
+            ]
+        ];
+
+        let currentQuiz = null;
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30 * 60; // 30 minuti in secondi
+        let timerInterval;
+
+        const ballsContainer = document.getElementById('quiz-balls');
+        for (let i = 1; i <= 30; i++) {
+            const ball = document.createElement('div');
+            ball.className = 'quiz-ball';
+            ball.id = `ball-${i}`;
+            ball.innerText = i;
+            ballsContainer.appendChild(ball);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById('quiz-timer').innerText = `Tempo rimanente: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function selectQuiz() {
+            const quizSelect = document.getElementById('quiz-select');
+            const selectedQuiz = parseInt(quizSelect.value);
+            if (selectedQuiz === 0) {
+                document.getElementById('quiz-timer').style.display = 'none';
+                document.getElementById('quiz-balls').style.display = 'none';
+                document.getElementById('quiz-question').innerText = '';
+                document.getElementById('quiz-options').innerHTML = '';
+                document.getElementById('quiz-feedback').style.display = 'none';
+                document.getElementById('quiz-result').innerHTML = '';
+                document.getElementById('retry-button').style.display = 'none';
+                clearInterval(timerInterval);
+                return;
+            }
+
+            currentQuiz = selectedQuiz - 1;
+            resetQuiz();
+        }
+
+        function loadQuizQuestion() {
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const retryButton = document.getElementById('retry-button');
+
+            if (currentQuestionIndex >= currentQuestions.length) {
+                endQuiz();
+                return;
+            }
+
+            const currentQuestion = currentQuestions[currentQuestionIndex];
+            questionElement.innerText = `Domanda ${currentQuestionIndex + 1}: ${currentQuestion.question}`;
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            resultElement.innerHTML = '';
+            retryButton.style.display = 'none';
+
+            const shuffledOptions = shuffleArray([...currentQuestion.options]);
+            shuffledOptions.forEach(option => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'quiz-option';
+                optionElement.innerText = option;
+                optionElement.addEventListener('click', () => checkAnswer(option, currentQuestion.correct));
+                optionsElement.appendChild(optionElement);
+            });
+        }
+
+        function checkAnswer(selected, correct) {
+            const feedbackElement = document.getElementById('quiz-feedback');
+            feedbackElement.style.display = 'block';
+            const currentBall = document.getElementById(`ball-${currentQuestionIndex + 1}`);
+            if (selected === correct) {
+                currentBall.classList.add('correct');
+                feedbackElement.innerText = 'Corretto! Ottimo lavoro!';
+                feedbackElement.className = 'quiz-feedback correct';
+                score++;
+            } else {
+                currentBall.classList.add('incorrect');
+                feedbackElement.innerText = `Sbagliato. La risposta corretta è: ${correct}.`;
+                feedbackElement.className = 'quiz-feedback incorrect';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                loadQuizQuestion();
+            }, 1500);
+        }
+
+        function endQuiz() {
+            clearInterval(timerInterval);
+            const questionElement = document.getElementById('quiz-question');
+            const optionsElement = document.getElementById('quiz-options');
+            const feedbackElement = document.getElementById('quiz-feedback');
+            const resultElement = document.getElementById('quiz-result');
+            const timerElement = document.getElementById('quiz-timer');
+            const retryButton = document.getElementById('retry-button');
+
+            questionElement.innerText = 'Quiz Completato!';
+            optionsElement.innerHTML = '';
+            feedbackElement.style.display = 'none';
+            timerElement.style.display = 'none';
+            retryButton.style.display = 'block';
+
+            if (score >= 21) {
+                resultElement.innerText = `Hai superato il test! Punteggio: ${score}/30`;
+                resultElement.style.color = '#00ff00';
+            } else {
+                resultElement.innerText = `Torna a studiare! Punteggio: ${score}/30`;
+                resultElement.style.color = '#ff0000';
+            }
+        }
+
+        function resetQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            timeLeft = 30 * 60;
+            document.getElementById('quiz-timer').style.display = 'block';
+            document.getElementById('quiz-timer').innerText = 'Tempo rimanente: 30:00';
+            document.getElementById('quiz-balls').style.display = 'flex';
+            document.querySelectorAll('.quiz-ball').forEach(ball => {
+                ball.classList.remove('correct');
+                ball.classList.remove('incorrect');
+            });
+            currentQuestions = shuffleArray([...allQuestions[currentQuiz]]);
+            clearInterval(timerInterval);
+            startTimer();
+            loadQuizQuestion();
+        }
+
+        document.getElementById('retry-button').addEventListener('click', resetQuiz);
+    </script>
+</body>
+</html>
